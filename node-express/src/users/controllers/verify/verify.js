@@ -1,7 +1,8 @@
 import errorHandler from "./errorHandler";
+import models from "../../models/users/verify";
 
-async function validateInput(req, res) {
-  /*  validates the supplied token to ensure the token is a JWT token,
+function validateInput(req, res) {
+  /*  validates the supplied token in the req body to ensure the token is a JWT token,
    *  not expired, nor tampered with.
    *
    *  This function should put the decoded token into the
@@ -70,7 +71,7 @@ function respond(req, res) {
 
 export default async function verify(req, res) {
   try {
-    await validateInput(req, res);
+    validateInput(req, res);
     await decryptData(req, res);
     await getStoredData(req, res);
     compareJti(req, res);

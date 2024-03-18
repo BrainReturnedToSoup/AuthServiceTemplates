@@ -1,4 +1,5 @@
 import errorHandler from "./errorHandler";
+import models from "../../models/users/update";
 
 const password = {
   validateInput: function (req, res) {
@@ -9,7 +10,7 @@ const password = {
      *  It does not add any new data to the req object.
      */
   },
-  applyUpdate: async function (req, res) {
+  update: async function (req, res) {
     /*  Takes the user ID and new password from the req body and
      *  uses such in the overwrite of the password linked to the user ID using a custom
      *  model abstraction.
@@ -28,7 +29,7 @@ const emailUsername = {
      *  It does not add any new data to the req object.
      */
   },
-  applyUpdate: async function (req, res) {
+  update: async function (req, res) {
     /*  Takes the user ID and new emailUsernme from the req body and
      *  uses such in the overwrite of the 'email_username' linked to the user ID using a custom
      *  model abstraction.
@@ -48,7 +49,7 @@ export default {
   password: async function (req, res) {
     try {
       password.validateInput(req, res);
-      await password.applyUpdate(req, res);
+      await password.update(req, res);
       respond(req, res);
     } catch (error) {
       errorHandler.password(req, res, error);
@@ -57,7 +58,7 @@ export default {
   emailUsername: async function (req, res) {
     try {
       emailUsername.validateInput(req, res);
-      await emailUsername.applyUpdate(req, res);
+      await emailUsername.update(req, res);
       respond(req, res);
     } catch (error) {
       errorHandler.emailUsername(req, res, error);

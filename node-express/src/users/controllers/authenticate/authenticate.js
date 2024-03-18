@@ -1,4 +1,5 @@
 import errorHandler from "./errorHandler";
+import models from "../../models/users/authenticate";
 
 function validateInput(req, res) {
   /*  validates the supplied emailUsername and password from the req body.
@@ -7,7 +8,7 @@ function validateInput(req, res) {
    */
 }
 
-async function getData(req, res) {
+async function getStoredData(req, res) {
   /*  takes the emailUsername from the req body and uses such to fetch the corresponding
    *  user ID and hashed password via a custom model abstraction.
    *
@@ -26,7 +27,7 @@ async function compare(req, res) {
    */
 }
 
-async function createNewSession(req, res) {
+async function createSession(req, res) {
   /*  takes the user ID stored in req.userData and creates a new record in the 'in_app_grant' table.
 
    *  This is achieved doing the following in order:
@@ -65,9 +66,9 @@ function respond(req, res) {
 export default async function authenticate(req, res) {
   try {
     validateInput(req, res);
-    await getData(req, res);
+    await getStoredData(req, res);
     await compare(req, res);
-    await createNewSession(req, res);
+    await createSession(req, res);
     createToken(req, res);
     respond(req, res);
   } catch (error) {
