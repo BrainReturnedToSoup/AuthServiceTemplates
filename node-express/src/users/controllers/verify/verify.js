@@ -23,7 +23,7 @@ async function decryptData(req, res) {
    */
 }
 
-async function getStoredData(req, res) {
+async function getJti(req, res) {
   /*  The in-app grant record associated with the token is fetched using a custom model abstraction. This includes
    *  the relevant data, such as the user ID and the JTI for that specific grant session.
    *
@@ -73,7 +73,7 @@ export default async function verify(req, res) {
   try {
     validateInput(req, res);
     await decryptData(req, res);
-    await getStoredData(req, res);
+    await getJti(req, res);
     compareJti(req, res);
     await generateNewToken(req, res);
     respond(req, res);

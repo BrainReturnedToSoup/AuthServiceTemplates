@@ -8,7 +8,7 @@ const password = {
      *  Only throws custom errors, does not add any new data to the req object.
      */
   },
-  getStoredData: async function (req, res) {
+  getData: async function (req, res) {
     /*  Takes the user ID from the req body, and uses such to fetch the corresponding
      *  stored hashed password via a custom model abstraction.
      *
@@ -36,7 +36,7 @@ const emailUsername = {
      *  Only throws custom errors, does not add any new data to the req object.
      */
   },
-  getStoredData: async function (req, res) {
+  getData: async function (req, res) {
     /*  Takes the user ID from the req body, and uses such to fetch the corresponding
      *  stored email via a custom model abstraction.
      *
@@ -68,7 +68,7 @@ export default {
   password: async function (req, res) {
     try {
       password.validateInput(req, res);
-      await password.getStoredData(req, res);
+      await password.getData(req, res);
       password.compare(req, res);
       respond(req, res);
     } catch (error) {
@@ -78,7 +78,7 @@ export default {
   emailUsername: async function (req, res) {
     try {
       emailUsername.validateInput(req, res);
-      await emailUsername.getStoredData(req, res);
+      await emailUsername.getData(req, res);
       emailUsername.compare(req, res);
       respond(req, res);
     } catch (error) {

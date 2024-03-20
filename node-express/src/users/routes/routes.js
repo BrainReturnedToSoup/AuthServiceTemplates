@@ -18,7 +18,7 @@ router.post("/", initialize);
  * - 'password' property and value in the request body.
  *
  * Returns:
- * - 'userID' property with a generated UUID in the response body.
+ * - 'userID' property with a generated UUID value in the response body.
  */
 
 router.post("/authenticate", authenticate);
@@ -98,7 +98,7 @@ router.delete("/:id", deleteUser);
  * Deletes a user.
  *
  * Expects:
- * - user ID in the route.
+ * - user ID in the route parameters.
  *
  * Returns:
  * - nothing
