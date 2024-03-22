@@ -1,7 +1,7 @@
 import pool from "../../../data-management/postgres-pool";
 
 export default {
-  getSessionRecord: function (grantID) {
+  getJti: async function (grantID) {
     let connection, result, error;
 
     try {
@@ -20,7 +20,7 @@ export default {
     //return a custom object that maps the query result to such with different properties,
     //as opposed to returning the query result itself.
   },
-  updateJti: function (jti) {
+  updateJti: async function (jti) {
     let connection, result, error;
 
     try {

@@ -1,0 +1,20 @@
+import Joi from "joi";
+
+//takes in an input string, and throws an error if the input string does not match
+//the declared schema. This thrown error is handled in the controller catch block via the corresponding
+//error handler.
+export default function validate(inputString) {
+  //the regexp for a string that contains atleast one uppercase, one lowercase,
+  //a number, a special character, and is inclusively between 12 and 20 characters long
+  const regexp =
+    new RegExp(`^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,20}$
+    `);
+
+  const schema = Joi.string().length(20).pattern(regexp);
+
+  const { error } = schema.validate(inputString);
+
+  if (error) {
+    throw error;
+  }
+}
