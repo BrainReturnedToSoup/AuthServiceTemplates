@@ -1,7 +1,7 @@
-import pool from "../../../../data-management/postgres-pool";
+import pool from "../../../data-management/postgres-pool";
 
 export default {
-  getHashedPassword: async function (userID) {
+  getUserIDandHashedPassword: async function (emailUsername) {
     let connection, result, error;
 
     try {
@@ -17,9 +17,10 @@ export default {
       //throw a custom DB error instead of using the raw error
     }
 
-    //return the hashed password by itself
+    //return a custom object that maps the query result to such with different properties,
+    //as opposed to returning the query result itself.
   },
-  getEmailUsername: async function (userID) {
+  createSession: async function (userID, grantID, jti, exp) {
     let connection, result, error;
 
     try {
@@ -35,6 +36,6 @@ export default {
       //throw a custom DB error instead of using the raw error
     }
 
-    //return the emailUsername by itself
+    //does not return anything, the absence of an error means the delete went through.
   },
 };

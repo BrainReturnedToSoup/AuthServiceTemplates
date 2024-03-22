@@ -1,4 +1,4 @@
-import pool from "../../../../data-management/postgres-pool";
+import pool from "../../../data-management/postgres-pool";
 
 export default {
   deleteUser: async function (userID) {

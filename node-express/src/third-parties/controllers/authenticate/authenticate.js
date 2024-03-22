@@ -1,4 +1,5 @@
 import errorHandler from "./errorHandler";
+import models from "../../models/authenticate";
 
 function validateInput(req, res) {
   /*  validates the supplied emailUsername, password, and third-party ID from the req body.
@@ -19,7 +20,7 @@ async function retrieveURI(req, res) {
    */
 }
 
-async function getUserData(req, res) {
+async function getUserRecord(req, res) {
   /*  takes the emailUsername from the req body and uses such to fetch the corresponding
    *  user ID and hashed password via a custom model abstraction.
    *
@@ -75,7 +76,7 @@ function respond(req, res) {
 export default async function authenticate(req, res) {
   try {
     validateInput(req, res);
-    await getUserData(req, res);
+    await getUserRecord(req, res);
     await comparePasswords(req, res);
     await retrieveURI(req, res);
     await createThirdPartySession(req, res);

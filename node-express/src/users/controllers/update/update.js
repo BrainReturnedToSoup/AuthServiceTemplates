@@ -1,5 +1,5 @@
 import errorHandler from "./errorHandler";
-import models from "../../models/users/update";
+import models from "../../models/update";
 
 const password = {
   validateInput: function (req, res) {

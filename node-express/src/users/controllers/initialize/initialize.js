@@ -1,5 +1,5 @@
 import errorHandler from "./errorHandler";
-import models from "../../models/users/initialize";
+import models from "../../models/initialize";
 
 function validateInput(req, res) {
   /*  validates the supplied emailUsername and password

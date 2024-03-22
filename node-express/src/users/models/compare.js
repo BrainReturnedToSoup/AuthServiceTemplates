@@ -1,7 +1,7 @@
-import pool from "../../../../data-management/postgres-pool";
+import pool from "../../../data-management/postgres-pool";
 
 export default {
-  updatePassword: async function (userID, newPassword) {
+  getHashedPassword: async function (userID) {
     let connection, result, error;
 
     try {
@@ -17,9 +17,9 @@ export default {
       //throw a custom DB error instead of using the raw error
     }
 
-    //does not return anything, the absence of an error means the update went through.
+    //return the hashed password by itself
   },
-  updateEmailUsername: async function (userID, newEmailUsername) {
+  getEmailUsername: async function (userID) {
     let connection, result, error;
 
     try {
@@ -35,6 +35,6 @@ export default {
       //throw a custom DB error instead of using the raw error
     }
 
-    //does not return anything, the absence of an error means the update went through.
+    //return the emailUsername by itself
   },
 };

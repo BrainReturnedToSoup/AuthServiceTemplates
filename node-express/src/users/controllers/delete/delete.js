@@ -1,5 +1,5 @@
 import errorHandler from "./errorHandler";
-import models from "../../models/users/delete";
+import models from "../../models/delete";
 
 function validateInput(req, res) {
   /*  validates the supplied user ID from the URI parameter 'id'.
@@ -11,7 +11,7 @@ function validateInput(req, res) {
    */
 }
 
-async function deleteUserRecord(req, res) {
+async function deleteRecord(req, res) {
   /*  Takes the user ID from the req object and initiates the deletion of a
    *  user via a custom model abstraction.
    */
@@ -26,7 +26,7 @@ function respond(req, res) {
 export default async function deleteUser(req, res) {
   try {
     validateInput(req, res);
-    await deleteUserRecord(req, res);
+    await deleteRecord(req, res);
     respond(req, res);
   } catch (error) {
     errorHandler(req, res, error);

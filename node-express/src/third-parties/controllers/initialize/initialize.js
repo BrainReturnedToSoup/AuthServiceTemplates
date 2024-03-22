@@ -1,4 +1,5 @@
 import errorHandler from "./errorHandler";
+import models from "../../models/initialize"
 
 function validateInput(req, res) {
   /*  validates the supplied third-party name and URI

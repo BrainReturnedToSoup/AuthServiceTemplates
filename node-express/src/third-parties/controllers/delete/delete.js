@@ -1,4 +1,5 @@
 import errorHandler from "./errorHandler";
+import models from "../../models/delete";
 
 function validateInput(req, res) {
   /*  validates the supplied third-party ID from the URI parameter 'id'.
@@ -10,7 +11,7 @@ function validateInput(req, res) {
    */
 }
 
-async function deleteThirdPartyRecord(req, res) {
+async function deleteRecord(req, res) {
   /*  Takes the third-party ID from the req object and initiates the deletion of a
    *  third-party via a custom model abstraction.
    */
@@ -25,7 +26,7 @@ function respond(req, res) {
 export default async function deleteThirdParty(req, res) {
   try {
     validateInput(req, res);
-    await deleteThirdPartyRecord(req, res);
+    await deleteRecord(req, res);
     respond(req, res);
   } catch (error) {
     errorHandler(req, res, error);

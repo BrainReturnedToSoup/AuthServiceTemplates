@@ -1,5 +1,5 @@
 import errorHandler from "./errorHandler";
-import models from "../../models/users/verify";
+import models from "../../models/verify";
 
 function validateInput(req, res) {
   /*  validates the supplied token in the req body to ensure the token is a JWT token,
@@ -12,7 +12,7 @@ function validateInput(req, res) {
    */
 }
 
-async function decryptData(req, res) {
+async function decryptTokenPayload(req, res) {
   /*  Takes the decoded token from req.decodedToken and decrypts the corresponding
    *  Data within it.
    *
@@ -23,7 +23,7 @@ async function decryptData(req, res) {
    */
 }
 
-async function getJti(req, res) {
+async function getStoredJti(req, res) {
   /*  The in-app grant record associated with the token is fetched using a custom model abstraction. This includes
    *  the relevant data, such as the user ID and the JTI for that specific grant session.
    *
@@ -72,8 +72,8 @@ function respond(req, res) {
 export default async function verify(req, res) {
   try {
     validateInput(req, res);
-    await decryptData(req, res);
-    await getJti(req, res);
+    await decryptTokenPayload(req, res);
+    await getStoredJti(req, res);
     compareJti(req, res);
     await generateNewToken(req, res);
     respond(req, res);

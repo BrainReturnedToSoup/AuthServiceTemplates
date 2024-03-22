@@ -1,8 +1,13 @@
 import express from "express";
 
+import authenticate from "../controllers/authenticate/authenticate";
+import deleteThirdParty from "../controllers/delete/delete";
+import initialize from "../controllers/initialize/initialize";
+import verify from "../controllers/verify/verify";
+
 const router = express.Router();
 
-router.post("/", "controller here");
+router.post("/", initialize);
 /**
  * Initialize a third-party source.
  *
@@ -15,7 +20,7 @@ router.post("/", "controller here");
  * - 'thirdpartyID' property with a generated UUID value in the response body.
  */
 
-router.post("/authenticate", "controller here");
+router.post("/authenticate", authenticate);
 /**
  * Authenticate a third-party source to a specific user's resources.
  *
@@ -29,7 +34,7 @@ router.post("/authenticate", "controller here");
  * - 'token' property with a third-party token in the response body.
  */
 
-router.post("/verify", "controller here");
+router.post("/verify", verify);
 /**
  * Verify a third-party source.
  *
@@ -40,7 +45,7 @@ router.post("/verify", "controller here");
  * - 'valid' property with a boolean value representing validity of the third-party source.
  */
 
-router.delete("/:id", "controller here");
+router.delete("/:id", deleteThirdParty);
 /**
  * Deletes a third-party source.
  *

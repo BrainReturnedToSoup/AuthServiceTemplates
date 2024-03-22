@@ -11,7 +11,7 @@ function validateInput(req, res) {
    */
 }
 
-async function decryptData(req, res) {
+async function decryptTokenPayload(req, res) {
   /*  Takes the decoded token from req.decodedToken and decrypts the corresponding
    *  Data within it. This includes the encrypted grant ID and third-party ID.
    *
@@ -22,7 +22,7 @@ async function decryptData(req, res) {
    */
 }
 
-async function getThirdPartyData(req, res) {
+async function getRecord(req, res) {
   /*  The third-party grant record associated with the token is fetched using the grant ID with a custom model abstraction.
    *  This includes the relevant data, such as the grant ID and third-party ID for that specific grant session.
    *
@@ -49,8 +49,8 @@ function respond(req, res) {
 export default async function verify(req, res) {
   try {
     validateInput(req, res);
-    await decryptData(req, res);
-    await getThirdPartyData(req, res);
+    await decryptTokenPayload(req, res);
+    await getRecord(req, res);
     compareThirdPartyID(req, res);
     respond(req, res);
   } catch (error) {
