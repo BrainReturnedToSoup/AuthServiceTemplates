@@ -1,7 +1,7 @@
 import pool from "../../../data-management/postgres-pool";
 
 export default {
-  retrieveURI: async function (thirdPartyID) {
+  getURI: async function (thirdPartyID) {
     let connection, result, error;
 
     try {

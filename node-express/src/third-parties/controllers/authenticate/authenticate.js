@@ -1,46 +1,75 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/authenticate";
 
-function validateInput(req, res) {
-  /*  validates the supplied emailUsername, password, and third-party ID from the req body.
-   *
-   *  Only throws custom errors, does not add any new data to the req object.
-   */
+import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
+import validatePassword from "../../../lib/utils/input-validators/password";
+import validateThirdPartyID from "../../../lib/utils/input-validators/thirdPartyID";
+import expGenerator from "../../../lib/utils/expGenerator";
+import encryptGrantID from "../../../lib/utils/cryptography/encrypt/grantID";
+import encryptThirdPartyID from "../../../lib/utils/cryptography/encrypt/thirdPartyID";
+
+import jwt from "jwt";
+import bcrypt from "bcrypt";
+import { v4 as uuidGenerator } from "uuid";
+
+/*  validates the supplied emailUsername, password, and third-party ID from the req body.
+ *
+ *  Only throws custom errors, does not add any new data to the req object.
+ */
+function validateInput(req) {
+  const { emailUsername, password, thirdPartyID } = req.body;
+
+  validateEmailUsername(emailUsername);
+  validatePassword(password);
+  validateThirdPartyID(thirdPartyID);
 }
 
-async function retrieveURI(req, res) {
-  /*  Retrieves the URI using the third-party ID from the req body.
-   *
-   *  If the URI does not exist, this means the third-party associated with the ID
-   *  does not exist either. Throw a custom error in response
-   *
-   *  The URI is stored within the req object.
-   *
-   *  req.uri = retrieved URI.
-   */
+/*  Retrieves the URI using the third-party ID from the req body.
+ *
+ *  If the URI does not exist, this means the third-party associated with the ID
+ *  does not exist either. Throw a custom error in response
+ *
+ *  The URI is stored within the req object.
+ *
+ *  req.uri = retrieved URI.
+ */
+async function getURI(req) {
+  const { thirdPartyID } = req.body;
+
+  req.uri = await models.getURI(thirdPartyID);
 }
 
-async function getUserRecord(req, res) {
-  /*  takes the emailUsername from the req body and uses such to fetch the corresponding
-   *  user ID and hashed password via a custom model abstraction.
-   *
-   *  The retrieved user ID and hashed password are stored in the req object under a userData property.
-   *
-   *  req.userData.userID = retrieved user ID
-   *  req.userData.hashedPassword = retrieved hashed password
-   */
+/*  takes the emailUsername from the req body and uses such to fetch the corresponding
+ *  user ID and hashed password via a custom model abstraction.
+ *
+ *  The retrieved user ID and hashed password are stored in the req object under a userData property.
+ *
+ *  req.userData.userID = retrieved user ID
+ *  req.userData.hashedPassword = retrieved hashed password
+ */
+async function getUserRecord(req) {
+  const { emailUsername } = req.body;
+
+  req.userData = await models.getUserRecord(emailUsername);
 }
 
-async function comparePasswords(req, res) {
-  /*  takes the password from the req body and compares such to the
-   *  hashed password stored in req.userData using bcrypt.
-   *
-   *  Only throws custom errors, does not add any new data to the req object.
-   */
+/*  takes the password from the req body and compares such to the
+ *  hashed password stored in req.userData using bcrypt.
+ *
+ *  Only throws custom errors, does not add any new data to the req object.
+ */
+async function comparePasswords(req) {
+  const { password } = req.body,
+    { hashedPassword } = req.userData;
+
+  const match = await bcrypt.compare(password, hashedPassword);
+
+  if (!match) {
+    //THROW CUSTOM ERROR HERE
+  }
 }
 
-async function createThirdPartySession(req, res) {
-  /*  takes the user ID stored in req.userData and the third-party ID in the req body
+/*  takes the user ID stored in req.userData and the third-party ID in the req body
    *  to create a new record in the 'third_party_session' table using a custom model abstraction.
 
    *  This is achieved doing the following in order:
@@ -54,32 +83,62 @@ async function createThirdPartySession(req, res) {
    *
    *  req.sessionData.grantID = grant ID created
    *  req.sessionData.exp = expiry value created
+   *  req.sessionData.authorization = authorization level assigned
    */
+async function createThirdPartySession(req) {
+  const { userID } = req.userData,
+    { thirdPartyID } = req.body;
+
+  const grantID = uuidGenerator(),
+    exp = expGenerator(),
+    authorization = 1; //ADD A MECHANISM TO DEFINE THE AUTHORIZATION LEVEL LATER
+
+  await models.createThirdPartySession(
+    userID,
+    thirdPartyID,
+    grantID,
+    authorization,
+    exp
+  );
+
+  req.sessionData = { grantID, exp, authorization };
 }
 
-function createToken(req, res) {
-  /*  takes the grant ID, third-party ID, and expiry value saved under req.sessionData and req.body and puts
-   *  such into the payload of the token being created.
-   *
-   *  The token itself is created using JWT, and such is stored within the
-   *  req object.
-   *
-   *  req.token = token just created
-   */
+/*  takes the grant ID, third-party ID, and expiry value saved under req.sessionData and req.body and puts
+ *  such into the payload of the token being created.
+ *
+ *  The token itself is created using JWT, and such is stored within the
+ *  req object.
+ *
+ *  req.token = token just created
+ */
+function createToken(req) {
+  const { grantID, exp } = req.sessionData,
+    { thirdPartyID } = req.body;
+
+  const encryptedGrantID = encryptGrantID(grantID),
+    encryptedThirdPartyID = encryptThirdPartyID(thirdPartyID);
+
+  req.token = jwt.sign({
+    grantID: encryptedGrantID,
+    thirdPartyID: encryptedThirdPartyID,
+    exp,
+  });
 }
 
+/*  Finally, the token created is sent to he third-party via the URI linked to the third-party ID
+ */
 function respond(req, res) {
-  /*  Finally, the token created is sent to he third-party via the URI linked to the third-party ID
-   */
+  res.status("CODE GOES HERE").json({ token: req.token });
 }
 
 export default async function authenticate(req, res) {
   try {
-    validateInput(req, res);
-    await getUserRecord(req, res);
-    await comparePasswords(req, res);
-    await retrieveURI(req, res);
-    await createThirdPartySession(req, res);
+    validateInput(req);
+    await getUserRecord(req);
+    await comparePasswords(req);
+    await getURI(req);
+    await createThirdPartySession(req);
     createToken(req, res);
     respond(req, res);
   } catch (error) {
