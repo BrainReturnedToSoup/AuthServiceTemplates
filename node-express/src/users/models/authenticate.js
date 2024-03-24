@@ -8,7 +8,12 @@ export default {
     try {
       connection = await pool.connect();
 
-      result = await connection.oneOrNone(``, [emailUsername]);
+      result = await connection.oneOrNone(
+        `
+        
+      `,
+        [emailUsername]
+      );
     } catch (err) {
       error = err;
     } finally {
