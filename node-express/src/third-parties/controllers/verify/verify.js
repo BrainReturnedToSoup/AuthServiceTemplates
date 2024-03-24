@@ -6,6 +6,8 @@ import decryptGrantID from "../../../lib/utils/cryptography/decrypt/grantID";
 
 import jwt from "jwt";
 
+import { DoesNotMatch } from "../../../lib/errors/controller";
+
 /*  validates the supplied token in the req body to ensure the token is a JWT token,
  *  not expired, nor tampered with.
  *
@@ -54,9 +56,8 @@ async function getSessionIDs(req) {
  *  Only throws custom errors, does not add any new data to the req object.
  */
 function compareThirdPartyID(req) {
-  if (req.tokenData.thirdPartyID !== req.sessionData.thirdPartyID) {
-    //THROW CUSTOM ERROR HERE
-  }
+  if (req.tokenData.thirdPartyID !== req.sessionData.thirdPartyID)
+    throw new DoesNotMatch();
 }
 
 /*  takes the third-party ID from the req body and compares such to the

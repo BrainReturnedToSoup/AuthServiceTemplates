@@ -12,6 +12,8 @@ import jwt from "jwt";
 import bcrypt from "bcrypt";
 import { v4 as uuidGenerator } from "uuid";
 
+import { DoesNotMatch } from "../../../lib/errors/controller";
+
 /*  validates the supplied emailUsername, password, and third-party ID from the req body.
  *
  *  Only throws custom errors, does not add any new data to the req object.
@@ -64,9 +66,7 @@ async function comparePasswords(req) {
 
   const match = await bcrypt.compare(password, hashedPassword);
 
-  if (!match) {
-    //THROW CUSTOM ERROR HERE
-  }
+  if (!match) throw new DoesNotMatch();
 }
 
 /*  takes the user ID stored in req.userData and the third-party ID in the req body
