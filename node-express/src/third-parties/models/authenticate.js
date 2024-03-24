@@ -1,44 +1,71 @@
 import pool from "../../../data-management/postgres-pool";
+import { DatabaseError, DataNotFoundError } from "../../lib/errors/model";
 
 export default {
   getURI: async function (thirdPartyID) {
     let connection, result, error;
 
     try {
+      connection = await pool.connect();
+
+      result = await connection.oneOrNone(
+        `
+        SELECT uri
+        FROM Third_Parties
+        WHERE third_party_id = $1
+        `,
+        [thirdPartyID]
+      );
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
 
-    //return a custom object that maps the query result to such with different properties,
-    //as opposed to returning the query result itself.
+    if (!result) {
+      throw new DataNotFoundError();
+    }
+
+    return result.uri;
   },
 
-  getUserRecord: async function (emailUsername) {
+  getUserIDandPassword: async function (emailUsername) {
     let connection, result, error;
 
     try {
+      connection = await pool.connect();
+
+      result = await connection.oneOrNone(
+        `
+        SELECT user_id, pw
+        FROM Users
+        WHERE email_username = $1
+        `,
+        [emailUsername]
+      );
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
 
-    //return a custom object that maps the query result to such with different properties,
-    //as opposed to returning the query result itself.
+    if (!result) {
+      throw new DataNotFoundError();
+    }
+
+    return { userID: result.user_id, hashedPassword: result.pw };
   },
 
   createThirdPartySession: async function (
@@ -48,21 +75,37 @@ export default {
     authorization,
     exp
   ) {
-    let connection, result, error;
+    let connection, error;
 
     try {
+      connection = await pool.connect();
+
+      await connection.query(
+        `INSERT INTO Third_Party_Sessions 
+          ( 
+            user_id,
+            grant_id,
+            third_party_id,
+            authorization,
+            exp
+          )
+         SET user_id = $1,
+          grant_id = $2,
+          third_party_id = $3,
+          authorization = $4,
+          exp = $5 `,
+        [userID, grantID, thirdPartyID, authorization, exp]
+      );
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
-
-    //do not return anything, errors reflect the lack of success
   },
 };

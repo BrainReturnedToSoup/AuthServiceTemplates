@@ -32,7 +32,7 @@ export default {
       throw new DataNotFoundError();
     }
 
-    return result.password;
+    return result.pw;
   },
 
   getEmailUsername: async function (userID) {

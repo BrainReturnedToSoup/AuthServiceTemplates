@@ -10,9 +10,7 @@ export default {
 
       result = await connection.oneOrNone(
         `
-        SELECT
-          user_id,
-          pw
+        SELECT user_id, pw
         FROM users
         WHERE email_username = $1
       `,
@@ -34,7 +32,7 @@ export default {
       throw new DataNotFoundError();
     }
 
-    return { userID: result.user_id, hashedPassword: result.password };
+    return { userID: result.user_id, hashedPassword: result.pw };
   },
 
   createSessionRecord: async function (userID, grantID, jti, exp) {

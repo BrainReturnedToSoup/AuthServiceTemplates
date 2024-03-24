@@ -47,10 +47,10 @@ async function getURI(req) {
  *  req.userData.userID = retrieved user ID
  *  req.userData.hashedPassword = retrieved hashed password
  */
-async function getUserRecord(req) {
+async function getUserIDandPassword(req) {
   const { emailUsername } = req.body;
 
-  req.userData = await models.getUserRecord(emailUsername);
+  req.userData = await models.getUserIDandPassword(emailUsername);
 }
 
 /*  takes the password from the req body and compares such to the
@@ -135,7 +135,7 @@ function respond(req, res) {
 export default async function authenticate(req, res) {
   try {
     validateInput(req);
-    await getUserRecord(req);
+    await getUserIDandPassword(req);
     await comparePasswords(req);
     await getURI(req);
     await createThirdPartySession(req);

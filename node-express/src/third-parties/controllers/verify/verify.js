@@ -42,10 +42,10 @@ async function decryptTokenPayload(req) {
  *
  *  req.thirdPartyID = retrieved third-party ID
  */
-async function getSessionRecord(req) {
+async function getSessionIDs(req) {
   const { grantID } = req.tokenData;
 
-  req.sessionData = await models.getSessionRecord(grantID);
+  req.sessionData = await models.getSessionIDs(grantID);
 }
 
 /*  takes the third-party ID from the req body and compares such to the
@@ -81,7 +81,7 @@ export default async function verify(req, res) {
   try {
     validateInput(req);
     await decryptTokenPayload(req);
-    await getSessionRecord(req);
+    await getSessionIDs(req);
     compareThirdPartyID(req);
     await verifyUserID(req);
     respond(res);

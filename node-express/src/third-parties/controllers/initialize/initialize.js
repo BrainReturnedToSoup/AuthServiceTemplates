@@ -34,7 +34,7 @@ async function createThirdParty(req) {
 
   req.thirdPartyID = uuidGenerator();
 
-  await models.createThirdParty(name, req.thirdPartyID, uri);
+  await models.createThirdParty(req.thirdPartyID, name, uri);
 }
 
 /*  Finally, a request demonstrating the success of the update is sent. This is
