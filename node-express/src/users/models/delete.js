@@ -1,22 +1,24 @@
 import pool from "../../../data-management/postgres-pool";
+import { DatabaseError } from "../../lib/errors/model";
 
 export default {
   deleteUser: async function (userID) {
-    let connection, result, error;
+    let connection, error;
 
     try {
+      connection = await pool.connect();
+
+      await connection.query(``, [userID]);
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
-
-    //does not return anything, the absence of an error means the delete went through.
   },
 };

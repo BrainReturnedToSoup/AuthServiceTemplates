@@ -1,41 +1,50 @@
 import pool from "../../../data-management/postgres-pool";
+import { DatabaseError, DataNotFoundError } from "../../lib/errors/model";
 
 export default {
   getUserIDandHashedPw: async function (emailUsername) {
     let connection, result, error;
 
     try {
+      connection = await pool.connect();
+
+      result = await connection.oneOrNone(``, [emailUsername]);
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
 
-    //return a custom object that maps the query result to such with different properties,
-    //as opposed to returning the query result itself.
+    if (!result) {
+      throw new DataNotFoundError();
+    }
+
+    return { userID: result.user_id, hashedPassword: result.password };
   },
+
   createSessionRecord: async function (userID, grantID, jti, exp) {
-    let connection, result, error;
+    let connection, error;
 
     try {
+      connection = await pool.connect();
+
+      await connection.query(``, [userID, grantID, jti, exp]);
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
-
-    //does not return anything, the absence of an error means the delete went through.
   },
 };

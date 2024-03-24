@@ -1,40 +1,56 @@
 import pool from "../../../data-management/postgres-pool";
+import { DatabaseError, DataNotFoundError } from "../../lib/errors/model";
 
 export default {
   getHashedPassword: async function (userID) {
     let connection, result, error;
 
     try {
+      connection = await pool.connect();
+
+      result = await connection.oneOrNone(``, [userID]);
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
 
-    //return the hashed password by itself
+    if (!result) {
+      throw new DataNotFoundError();
+    }
+
+    return result.password;
   },
+
   getEmailUsername: async function (userID) {
     let connection, result, error;
 
     try {
+      connection = await pool.connect();
+
+      result = await connection.oneOrNone(``, [userID]);
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
 
-    //return the emailUsername by itself
+    if (!result) {
+      throw new DataNotFoundError();
+    }
+
+    return result.emailUsername;
   },
 };

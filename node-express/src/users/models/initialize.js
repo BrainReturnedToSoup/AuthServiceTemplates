@@ -1,22 +1,24 @@
 import pool from "../../../data-management/postgres-pool";
+import { DatabaseError } from "../../lib/errors/model";
 
 export default {
   createUser: async function (userID, emailUsername, hashedPassword) {
-    let connection, result, error;
+    let connection, error;
 
     try {
+      connection = await pool.connect();
+
+      await connection.query(``, [userID, emailUsername, hashedPassword]);
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
-
-    //does not return anything, the absence of an error means the creation went through.
   },
 };

@@ -1,41 +1,50 @@
 import pool from "../../../data-management/postgres-pool";
+import { DatabaseError, DataNotFoundError } from "../../lib/errors/model";
 
 export default {
   getJti: async function (grantID) {
     let connection, result, error;
 
     try {
+      connection = await pool.connect();
+
+      await connection.query(``, [grantID]);
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
 
-    //return a custom object that maps the query result to such with different properties,
-    //as opposed to returning the query result itself.
+    if (!result) {
+      throw new DataNotFoundError();
+    }
+
+    return result.jti;
   },
+
   updateJti: async function (jti) {
-    let connection, result, error;
+    let connection, error;
 
     try {
+      connection = await pool.connect();
+
+      await connection.query(``, [jti]);
     } catch (err) {
       error = err;
     } finally {
       if (connection) {
-        connection.done();
+        await connection.done();
       }
     }
 
     if (error) {
-      //throw a custom DB error instead of using the raw error
+      throw new DatabaseError(error.message);
     }
-
-    //does not return anything, the absence of an error means the update went through.
   },
 };

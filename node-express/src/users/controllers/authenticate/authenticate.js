@@ -42,9 +42,9 @@ async function getUserData(req) {
  */
 async function comparePasswords(req) {
   const { password } = req.body,
-    { hashedPw } = req.userData;
+    { hashedPassword } = req.userData;
 
-  const match = await bcrypt.compare(password, hashedPw);
+  const match = await bcrypt.compare(password, hashedPassword);
 
   if (!match) {
     //THROW CUSTOM ERROR FROM HERE

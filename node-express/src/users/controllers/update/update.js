@@ -76,6 +76,7 @@ export default {
       errorHandler.password(req, res, error);
     }
   },
+  
   emailUsername: async function (req, res) {
     try {
       emailUsername.validateInput(req);

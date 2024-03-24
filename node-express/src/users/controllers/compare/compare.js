@@ -97,7 +97,7 @@ const emailUsername = {
  *  of the response is a JSON that contains the single property 'matches', which derives
  *  from the 'matches' property on the req object.
  */
-function respond(req, res) {
+function respond(res) {
   res.status("CODE GOES HERE").json({ matches: true });
 }
 
@@ -107,18 +107,17 @@ export default {
       password.validateInput(req);
       await password.getData(req);
       password.compare(req);
-
-      respond(req, res);
+      respond(res);
     } catch (error) {
       errorHandler.password(req, res, error);
     }
   },
+  
   emailUsername: async function (req, res) {
     try {
       emailUsername.validateInput(req);
       await emailUsername.getData(req);
       emailUsername.compare(req);
-
       respond(req, res);
     } catch (error) {
       errorHandler.emailUsername(req, res, error);
