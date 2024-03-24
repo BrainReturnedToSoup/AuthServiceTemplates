@@ -8,7 +8,13 @@ export default {
     try {
       connection = await pool.connect();
 
-      await connection.query(``, [userID, emailUsername, hashedPassword]);
+      await connection.query(
+        `
+        INSERT INTO Users (user_id, email_username, pw)
+        VALUES ($1, $2, $3)
+        `,
+        [userID, emailUsername, hashedPassword]
+      );
     } catch (err) {
       error = err;
     } finally {

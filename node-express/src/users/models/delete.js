@@ -8,7 +8,13 @@ export default {
     try {
       connection = await pool.connect();
 
-      await connection.query(``, [userID]);
+      await connection.query(
+        `
+        DELETE FROM Users
+        WHERE user_id = $1
+        `,
+        [userID]
+      );
     } catch (err) {
       error = err;
     } finally {

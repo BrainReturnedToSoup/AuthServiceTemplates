@@ -8,7 +8,14 @@ export default {
     try {
       connection = await pool.connect();
 
-      await connection.query(``, [userID, newPassword]);
+      await connection.query(
+        `
+        UPDATE Users
+        SET pw = $1
+        WHERE user_id = $2
+        `,
+        [newPassword, userID]
+      );
     } catch (err) {
       error = err;
     } finally {
@@ -28,7 +35,14 @@ export default {
     try {
       connection = await pool.connect();
 
-      await connection.query(``, [userID, newEmailUsername]);
+      await connection.query(
+        `
+        UPDATE Users
+        SET email_username = $1
+        WHERE user_id = $2
+        `,
+        [newEmailUsername, userID]
+      );
     } catch (err) {
       error = err;
     } finally {

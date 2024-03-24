@@ -8,7 +8,14 @@ export default {
     try {
       connection = await pool.connect();
 
-      await connection.query(``, [grantID]);
+      await connection.query(
+        `
+        SELECT jti
+        FROM User_Sessions
+        WHERE grant_id = $1
+        `,
+        [grantID]
+      );
     } catch (err) {
       error = err;
     } finally {
@@ -28,13 +35,20 @@ export default {
     return result.jti;
   },
 
-  updateJti: async function (jti) {
+  updateJti: async function (grantID, jti) {
     let connection, error;
 
     try {
       connection = await pool.connect();
 
-      await connection.query(``, [jti]);
+      await connection.query(
+        `
+        UPDATE User_Sessions
+        SET jti = $1
+        WHERE grant_id = $2
+      `,
+        [jti, grantID]
+      );
     } catch (err) {
       error = err;
     } finally {

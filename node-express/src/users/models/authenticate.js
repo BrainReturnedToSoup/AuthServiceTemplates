@@ -10,7 +10,11 @@ export default {
 
       result = await connection.oneOrNone(
         `
-        
+        SELECT
+          user_id,
+          pw
+        FROM users
+        WHERE email_username = $1
       `,
         [emailUsername]
       );
@@ -39,7 +43,13 @@ export default {
     try {
       connection = await pool.connect();
 
-      await connection.query(``, [userID, grantID, jti, exp]);
+      await connection.query(
+        `
+        INSERT INTO User_Sessions (grant_id, user_id, jti, expiration)
+        VALUES ($1, $2, $3, $4)
+      `,
+        [userID, grantID, jti, exp]
+      );
     } catch (err) {
       error = err;
     } finally {

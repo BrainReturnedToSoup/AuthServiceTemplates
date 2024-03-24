@@ -75,9 +75,11 @@ function compareJti(req) {
  *  req.newToken = new token created.
  */
 async function generateNewToken(req) {
+  const { grantID } = req.decodedToken;
+
   const newJti = uuidGenerator();
 
-  await models.updateJti(newJti);
+  await models.updateJti(grantID, newJti);
 
   req.tokenData.jti = newJti;
 

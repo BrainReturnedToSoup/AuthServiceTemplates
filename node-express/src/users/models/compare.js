@@ -8,7 +8,14 @@ export default {
     try {
       connection = await pool.connect();
 
-      result = await connection.oneOrNone(``, [userID]);
+      result = await connection.oneOrNone(
+        `
+        SELECT pw
+        FROM Users
+        WHERE user_id = $1
+        `,
+        [userID]
+      );
     } catch (err) {
       error = err;
     } finally {
@@ -34,7 +41,14 @@ export default {
     try {
       connection = await pool.connect();
 
-      result = await connection.oneOrNone(``, [userID]);
+      result = await connection.oneOrNone(
+        `
+        SELECT email_username
+        FROM Users
+        WHERE user_id = $1
+        `,
+        [userID]
+      );
     } catch (err) {
       error = err;
     } finally {
