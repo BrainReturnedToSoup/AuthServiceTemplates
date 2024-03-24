@@ -10,6 +10,8 @@ import bcrypt from "bcrypt";
 import { v4 as uuidGenerator } from "uuid";
 import jwt from "jsonwebtoken";
 
+import { DoesNotMatch } from "../../../lib/errors/controller";
+
 /*  validates the supplied emailUsername and password from the req body.
  *
  *  Throws validator library errors, does not add any new data to the req object.
@@ -46,9 +48,7 @@ async function comparePasswords(req) {
 
   const match = await bcrypt.compare(password, hashedPassword);
 
-  if (!match) {
-    //THROW CUSTOM ERROR FROM HERE
-  }
+  if (!match) throw new DoesNotMatch();
 }
 
 /*  takes the user ID stored in req.userData and creates a new record in the 'in_app_grant' table

@@ -7,6 +7,8 @@ import validateUserID from "../../../lib/utils/input-validators/userID";
 
 import bcrypt from "bcrypt";
 
+import { DoesNotMatch } from "../../../lib/errors/controller";
+
 const password = {
   /*  validates the supplied user ID and password from the req body.
    *
@@ -46,9 +48,7 @@ const password = {
 
     const match = await bcrypt.compare(password, hashedPassword);
 
-    if (!match) {
-      //THROW CUSTOM ERROR FROM HERE
-    }
+    if (!match) throw new DoesNotMatch();
   },
 };
 
@@ -85,11 +85,8 @@ const emailUsername = {
    *
    *  req.matches = boolean corresponding to the comparison.
    */
-
   compare: function (req) {
-    if (req.emailUsername !== req.body.emailUsername) {
-      //THROW CUSTOM ERROR HERE
-    }
+    if (req.emailUsername !== req.body.emailUsername) throw new DoesNotMatch();
   },
 };
 
@@ -112,7 +109,7 @@ export default {
       errorHandler.password(req, res, error);
     }
   },
-  
+
   emailUsername: async function (req, res) {
     try {
       emailUsername.validateInput(req);
