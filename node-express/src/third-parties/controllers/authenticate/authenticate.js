@@ -12,7 +12,7 @@ import jwt from "jwt";
 import bcrypt from "bcrypt";
 import { v4 as uuidGenerator } from "uuid";
 
-import { DoesNotMatch } from "../../../lib/errors/controller";
+import { DoesNotMatch, enums } from "../../../lib/errors/controller";
 
 /*  validates the supplied emailUsername, password, and third-party ID from the req body.
  *
@@ -66,7 +66,7 @@ async function comparePasswords(req) {
 
   const match = await bcrypt.compare(password, hashedPassword);
 
-  if (!match) throw new DoesNotMatch();
+  if (!match) throw new DoesNotMatch(enums.DoesNotMatch.PASSWORD);
 }
 
 /*  takes the user ID stored in req.userData and the third-party ID in the req body

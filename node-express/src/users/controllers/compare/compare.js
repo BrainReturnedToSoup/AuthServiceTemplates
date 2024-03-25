@@ -7,7 +7,7 @@ import validateUserID from "../../../lib/utils/input-validators/userID";
 
 import bcrypt from "bcrypt";
 
-import { DoesNotMatch } from "../../../lib/errors/controller";
+import { DoesNotMatch, enums } from "../../../lib/errors/controller";
 
 const password = {
   /*  validates the supplied user ID and password from the req body.
@@ -48,7 +48,7 @@ const password = {
 
     const match = await bcrypt.compare(password, hashedPassword);
 
-    if (!match) throw new DoesNotMatch();
+    if (!match) throw new DoesNotMatch(enums.DoesNotMatch.PASSWORD);
   },
 };
 
@@ -86,7 +86,8 @@ const emailUsername = {
    *  req.matches = boolean corresponding to the comparison.
    */
   compare: function (req) {
-    if (req.emailUsername !== req.body.emailUsername) throw new DoesNotMatch();
+    if (req.emailUsername !== req.body.emailUsername)
+      throw new DoesNotMatch(enums.DoesNotMatch.EMAIL_USERNAME);
   },
 };
 
