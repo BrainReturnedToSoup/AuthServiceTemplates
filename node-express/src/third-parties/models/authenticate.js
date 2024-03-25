@@ -1,5 +1,9 @@
 import pool from "../../../data-management/postgres-pool";
-import { DatabaseError, DataNotFoundError } from "../../lib/errors/model";
+import {
+  DatabaseError,
+  DataNotFoundError,
+  enums,
+} from "../../lib/errors/model";
 
 export default {
   getURI: async function (thirdPartyID) {
@@ -29,7 +33,7 @@ export default {
     }
 
     if (!result) {
-      throw new DataNotFoundError();
+      throw new DataNotFoundError(enums.DataNotFoundError.URI);
     }
 
     return result.uri;
@@ -62,7 +66,7 @@ export default {
     }
 
     if (!result) {
-      throw new DataNotFoundError();
+      throw new DataNotFoundError(enums.DataNotFoundError.USER_ID_HASHED_PW);
     }
 
     return { userID: result.user_id, hashedPassword: result.pw };

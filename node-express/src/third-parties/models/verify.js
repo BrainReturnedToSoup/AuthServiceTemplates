@@ -1,5 +1,9 @@
 import pool from "../../../data-management/postgres-pool";
-import { DatabaseError, DataNotFoundError } from "../../lib/errors/model";
+import {
+  DatabaseError,
+  DataNotFoundError,
+  enums,
+} from "../../lib/errors/model";
 
 export default {
   getSessionIDs: async function (grantID) {
@@ -29,7 +33,9 @@ export default {
     }
 
     if (!result) {
-      throw new DataNotFoundError();
+      throw new DataNotFoundError(
+        enums.DataNotFoundError.USER_ID_THIRD_PARTY_ID
+      );
     }
 
     return { userID: result.user_id, thirdPartyID: result.third_party_id };
@@ -62,7 +68,7 @@ export default {
     }
 
     if (!result) {
-      throw new DataNotFoundError();
+      throw new DataNotFoundError(enums.DataNotFoundError.USER_ID);
     }
   },
 };
