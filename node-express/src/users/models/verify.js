@@ -28,13 +28,9 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
 
-    if (!result) {
-      throw new DataNotFoundError(enums.DataNotFoundError.JTI);
-    }
+    if (!result) throw new DataNotFoundError(enums.DataNotFoundError.JTI);
 
     return result.jti;
   },
@@ -61,8 +57,6 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
   },
 };

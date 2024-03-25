@@ -34,12 +34,11 @@ function validateInput(req) {
 async function createUser(req) {
   const { emailUsername, password } = req.body;
 
-  const userID = uuidGenerator();
   const hashedPassword = await bcrypt.hash(password, "ADD SALT ROUNDS HERE");
 
-  await models.createUser(userID, emailUsername, hashedPassword);
+  req.userID = uuidGenerator();
 
-  req.userID = userID;
+  await models.createUser(req.userID, emailUsername, hashedPassword);
 }
 
 /*  Finally, a request demonstrating the success of the update is sent. This is

@@ -28,8 +28,6 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
   },
 };

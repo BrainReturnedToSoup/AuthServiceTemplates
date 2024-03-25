@@ -7,8 +7,6 @@ import validateUserID from "../../../lib/utils/input-validators/userID";
 
 import bcrypt from "bcrypt";
 
-import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
-
 const password = {
   /*  validates the supplied user ID and password from the req body.
    *
@@ -46,9 +44,7 @@ const password = {
     const { password } = req.body,
       { hashedPassword } = req;
 
-    const match = await bcrypt.compare(password, hashedPassword);
-
-    if (!match) throw new DoesNotMatchError(enums.DoesNotMatchError.PASSWORD);
+    req.matches = await bcrypt.compare(password, hashedPassword);
   },
 };
 
@@ -86,8 +82,7 @@ const emailUsername = {
    *  req.matches = boolean corresponding to the comparison.
    */
   compare: function (req) {
-    if (req.emailUsername !== req.body.emailUsername)
-      throw new DoesNotMatchError(enums.DoesNotMatchError.EMAIL_USERNAME);
+    req.matches = req.emailUsername === req.body.emailUsername;
   },
 };
 
@@ -95,8 +90,8 @@ const emailUsername = {
  *  of the response is a JSON that contains the single property 'matches', which derives
  *  from the 'matches' property on the req object.
  */
-function respond(res) {
-  res.status("CODE GOES HERE").json({ matches: true });
+function respond(req, res) {
+  res.status("CODE GOES HERE").json({ matches: req.matches });
 }
 
 export default {
@@ -105,7 +100,7 @@ export default {
       password.validateInput(req);
       await password.getData(req);
       password.compare(req);
-      respond(res);
+      respond(req, res);
     } catch (error) {
       errorHandler.password(req, res, error);
     }

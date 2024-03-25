@@ -99,7 +99,7 @@ function createToken(req) {
  *  response status is also sent based on this success.
  */
 function respond(req, res) {
-  res.status("CODE GOES HERE").cookie("jwt", req.token, "COOKIE OPTIONS HERE");
+  res.status("CODE GOES HERE").json({ token: req.token });
 }
 
 export default async function authenticate(req, res) {

@@ -28,13 +28,9 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
 
-    if (!result) {
-      throw new DataNotFoundError(enums.DataNotFoundError.URI);
-    }
+    if (!result) throw new DataNotFoundError(enums.DataNotFoundError.URI);
 
     return result.uri;
   },
@@ -61,13 +57,10 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
 
-    if (!result) {
+    if (!result)
       throw new DataNotFoundError(enums.DataNotFoundError.USER_ID_HASHED_PW);
-    }
 
     return { userID: result.user_id, hashedPassword: result.pw };
   },
@@ -108,8 +101,6 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
   },
 };

@@ -24,9 +24,7 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
   },
 
   updateEmailUsername: async function (userID, newEmailUsername) {
@@ -51,8 +49,6 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
   },
 };

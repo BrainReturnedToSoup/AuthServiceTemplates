@@ -28,13 +28,9 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
 
-    if (!result) {
-      throw new DataNotFoundError(enums.DataNotFoundError.HASHED_PW);
-    }
+    if (!result) throw new DataNotFoundError(enums.DataNotFoundError.HASHED_PW);
 
     return result.pw;
   },
@@ -61,13 +57,10 @@ export default {
       }
     }
 
-    if (error) {
-      throw new DatabaseError(error.message);
-    }
+    if (error) throw new DatabaseError(error.message);
 
-    if (!result) {
+    if (!result)
       throw new DataNotFoundError(enums.DataNotFoundError.EMAIL_USERNAME);
-    }
 
     return result.emailUsername;
   },
