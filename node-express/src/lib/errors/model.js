@@ -1,18 +1,18 @@
-export class DatabaseError extends Error {
+class DatabaseError extends Error {
   constructor(message) {
     super(message);
     this.name = this.constructor.name;
   }
 }
 
-export class DataNotFoundError extends Error {
+class DataNotFoundError extends Error {
   constructor(message) {
     super(message);
     this.name = this.constructor.name;
   }
 }
 
-export const enums = Object.freeze({
+const enums = Object.freeze({
   DataNotFoundError: Object.freeze({
     USER_ID_HASHED_PW: 1,
     HASHED_PW: 2,
@@ -23,3 +23,5 @@ export const enums = Object.freeze({
     USER_ID_THIRD_PARTY_ID: 7,
   }),
 });
+
+export default { DataNotFoundError, DatabaseError, enums };
