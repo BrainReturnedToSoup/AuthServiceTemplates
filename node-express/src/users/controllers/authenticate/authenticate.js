@@ -10,7 +10,7 @@ import bcrypt from "bcrypt";
 import { v4 as uuidGenerator } from "uuid";
 import jwt from "jsonwebtoken";
 
-import { DoesNotMatch, enums } from "../../../lib/errors/controller";
+import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
 
 /*  validates the supplied emailUsername and password from the req body.
  *
@@ -48,7 +48,7 @@ async function comparePasswords(req) {
 
   const match = await bcrypt.compare(password, hashedPassword);
 
-  if (!match) throw new DoesNotMatch(enums.DoesNotMatch.PASSWORD);
+  if (!match) throw new DoesNotMatchError(enums.DoesNotMatchError.PASSWORD);
 }
 
 /*  takes the user ID stored in req.userData and creates a new record in the 'in_app_grant' table

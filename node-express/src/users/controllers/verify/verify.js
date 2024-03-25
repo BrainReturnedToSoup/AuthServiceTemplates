@@ -6,7 +6,7 @@ import { v4 as uuidGenerator } from "uuid";
 
 import jwt from "jwt";
 
-import { DoesNotMatch, enums } from "../../../lib/errors/controller";
+import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
 
 /*  validates the supplied token in the req body to ensure the token is a JWT token,
  *  not expired, nor tampered with.
@@ -59,7 +59,7 @@ function compareJti(req) {
   const { jti } = req.decodedToken,
     { storedJti } = req;
 
-  if (jti !== storedJti) throw new DoesNotMatch(enums.DoesNotMatch.JTI);
+  if (jti !== storedJti) throw new DoesNotMatchError(enums.DoesNotMatchError.JTI);
 }
 
 /*  At this point, the original token is completely valid, thus it is time to generate a new token

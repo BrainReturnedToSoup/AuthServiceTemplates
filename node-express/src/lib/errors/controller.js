@@ -1,4 +1,4 @@
-export class DoesNotMatch extends Error {
+export class DoesNotMatchError extends Error {
   constructor(message) {
     super(message);
     this.name = this.constructor.name;
@@ -6,7 +6,7 @@ export class DoesNotMatch extends Error {
 }
 
 export const enums = Object.freeze({
-  DoesNotMatch: Object.freeze({
+  DoesNotMatchError: Object.freeze({
     PASSWORD: 1,
     EMAIL_USERNAME: 2,
     THIRD_PARTY_ID: 3,
