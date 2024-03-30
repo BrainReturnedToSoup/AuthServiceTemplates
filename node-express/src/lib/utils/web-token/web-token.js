@@ -12,7 +12,7 @@ const webToken = {
     try {
       return jwt.sign(payload, "SECRET KEY HERE");
     } catch (error) {
-      jwtErrorHandler(error);
+      errorHandler(error);
     }
   },
 
@@ -20,13 +20,13 @@ const webToken = {
     try {
       return jwt.verify(token, "SECRET KEY HERE");
     } catch (error) {
-      jwtErrorHandler(error);
+      errorHandler(error);
     }
   },
 };
 
 //specific to the jsonwebtoken library
-function jwtErrorHandler(error) {
+function errorHandler(error) {
   switch (true) {
     case error instanceof TokenExpiredError:
       throw new TokenError(enums.EXPIRED);
