@@ -7,8 +7,7 @@ import expGenerator from "../../../lib/utils/web-token/expGenerator";
 import encryptGrantID from "../../../lib/utils/crypto/web-token/encrypt/grantID";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import webToken from "../../../lib/utils/web-token/web-token";
-
-import bcrypt from "bcrypt";
+import comparePasswords from "../../../lib/utils/crypto/password/compare";
 
 import controllerErrors from "../../../lib/errors/controller";
 const { DoesNotMatchError, enums } = controllerErrors;
@@ -47,7 +46,7 @@ async function comparePasswords(req) {
   const { password } = req.body,
     { hashedPassword } = req.userData;
 
-  const match = await bcrypt.compare(password, hashedPassword);
+  const match = await comparePasswords(password, hashedPassword);
 
   if (!match) throw new DoesNotMatchError(enums.DoesNotMatchError.PASSWORD);
 }
