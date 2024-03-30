@@ -1,5 +1,5 @@
 import Joi from "joi";
-import utilErrors from "../../errors/util";
+import utilErrors from "../../errors/util/input-validation";
 
 const { InputValidationError, enums } = utilErrors;
 

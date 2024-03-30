@@ -4,7 +4,7 @@ import models from "../../models/verify";
 import decryptGrantID from "../../../lib/utils/cryptography/decrypt/grantID";
 import { v4 as uuidGenerator } from "uuid";
 
-import jwt from "jwt";
+import webToken from "../../../lib/utils/web-token/web-token";
 
 import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
 
@@ -19,7 +19,7 @@ import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
 function validateInput(req) {
   const { token } = req.body;
 
-  req.decodedToken = jwt.verify(token, "SECRET KEY GOES HERE");
+  req.decodedToken = webToken.verify(token);
 }
 
 /*  Takes the decoded token from req.decodedToken and decrypts the corresponding
@@ -59,7 +59,8 @@ function compareJti(req) {
   const { jti } = req.decodedToken,
     { storedJti } = req;
 
-  if (jti !== storedJti) throw new DoesNotMatchError(enums.DoesNotMatchError.JTI);
+  if (jti !== storedJti)
+    throw new DoesNotMatchError(enums.DoesNotMatchError.JTI);
 }
 
 /*  At this point, the original token is completely valid, thus it is time to generate a new token
@@ -82,7 +83,8 @@ async function generateNewToken(req) {
   await models.updateJti(grantID, newJti);
 
   req.tokenData.jti = newJti;
-  req.newToken = jwt.sign(req.tokenData, "SECRET KEY GOES HERE");
+
+  req.newToken = webToken.sign(req.tokenData);
 }
 
 /*  Finally, the new token created can now be sent back to the user using the res body

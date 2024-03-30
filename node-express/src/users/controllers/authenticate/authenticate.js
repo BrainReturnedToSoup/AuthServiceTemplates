@@ -3,14 +3,15 @@ import models from "../../models/authenticate";
 
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
-import expGenerator from "../../../lib/utils/expGenerator";
+import expGenerator from "../../../lib/utils/web-token/expGenerator";
 import encryptGrantID from "../../../lib/utils/cryptography/encrypt/grantID";
 
 import bcrypt from "bcrypt";
 import { v4 as uuidGenerator } from "uuid";
-import jwt from "jsonwebtoken";
+import webToken from "../../../lib/utils/web-token/web-token";
 
-import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
+import controllerErrors from "../../../lib/errors/controller";
+const { DoesNotMatchError, enums } = controllerErrors;
 
 /*  validates the supplied emailUsername and password from the req body.
  *
@@ -91,7 +92,7 @@ function createToken(req) {
     grantID: encryptGrantID(req.sessionData.grantID),
   };
 
-  req.token = jwt.sign(payload, "PRIVATE KEY HERE");
+  req.token = webToken.sign(payload);
 }
 
 /*  Finally, the token created is retrieved from the req object, and supplied

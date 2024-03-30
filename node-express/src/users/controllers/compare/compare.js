@@ -1,5 +1,5 @@
-import errorHandler from "./errorHandler";
 import models from "../../models/compare";
+import errorHandler from "./errorHandler";
 
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";

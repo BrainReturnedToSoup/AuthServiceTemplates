@@ -4,7 +4,7 @@ import models from "../../models/verify";
 import decryptThirdPartyID from "../../../lib/utils/cryptography/decrypt/thirdPartyID";
 import decryptGrantID from "../../../lib/utils/cryptography/decrypt/grantID";
 
-import jwt from "jwt";
+import webToken from "../../../lib/utils/web-token/web-token";
 
 import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
 
@@ -19,7 +19,7 @@ import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
 function validateInput(req) {
   const { token } = req.body;
 
-  req.decodedToken = jwt.verify(token, "SECRET KEY HERE");
+  req.decodedToken = webToken.verify(token);
 }
 
 /*  Takes the decoded token from req.decodedToken and decrypts the corresponding

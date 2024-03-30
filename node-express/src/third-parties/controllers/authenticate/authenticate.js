@@ -8,7 +8,7 @@ import expGenerator from "../../../lib/utils/expGenerator";
 import encryptGrantID from "../../../lib/utils/cryptography/encrypt/grantID";
 import encryptThirdPartyID from "../../../lib/utils/cryptography/encrypt/thirdPartyID";
 
-import jwt from "jwt";
+import webToken from "../../../lib/utils/web-token/web-token";
 import bcrypt from "bcrypt";
 import { v4 as uuidGenerator } from "uuid";
 
@@ -119,7 +119,7 @@ function createToken(req) {
   const encryptedGrantID = encryptGrantID(grantID),
     encryptedThirdPartyID = encryptThirdPartyID(thirdPartyID);
 
-  req.token = jwt.sign({
+  req.token = webToken.sign({
     grantID: encryptedGrantID,
     thirdPartyID: encryptedThirdPartyID,
     exp,
