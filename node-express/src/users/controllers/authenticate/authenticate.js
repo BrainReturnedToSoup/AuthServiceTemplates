@@ -4,11 +4,11 @@ import models from "../../models/authenticate";
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
 import expGenerator from "../../../lib/utils/web-token/expGenerator";
-import encryptGrantID from "../../../lib/utils/cryptography/encrypt/grantID";
-
-import bcrypt from "bcrypt";
+import encryptGrantID from "../../../lib/utils/crypto/web-token/encrypt/grantID";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import webToken from "../../../lib/utils/web-token/web-token";
+
+import bcrypt from "bcrypt";
 
 import controllerErrors from "../../../lib/errors/controller";
 const { DoesNotMatchError, enums } = controllerErrors;

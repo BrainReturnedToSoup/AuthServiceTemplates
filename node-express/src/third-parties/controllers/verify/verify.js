@@ -1,12 +1,12 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/verify";
 
-import decryptThirdPartyID from "../../../lib/utils/cryptography/decrypt/thirdPartyID";
-import decryptGrantID from "../../../lib/utils/cryptography/decrypt/grantID";
-
+import decryptGrantID from "../../../lib/utils/crypto/web-token/decrypt/grantID";
+import decryptThirdPartyID from "../../../lib/utils/crypto/web-token/decrypt/thirdPartyID";
 import webToken from "../../../lib/utils/web-token/web-token";
 
-import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
+import controllerErrors from "../../../lib/errors/controller";
+const { DoesNotMatchError, enums } = controllerErrors;
 
 /*  validates the supplied token in the req body to ensure the token is a JWT token,
  *  not expired, nor tampered with.

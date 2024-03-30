@@ -1,11 +1,12 @@
-import errorHandler from "./errorHandler";
 import models from "../../models/verify";
+import errorHandler from "./errorHandler";
 
-import decryptGrantID from "../../../lib/utils/cryptography/decrypt/grantID";
+import decryptGrantID from "../../../lib/utils/crypto/web-token/decrypt/grantID";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import webToken from "../../../lib/utils/web-token/web-token";
 
-import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
+import controllerErrors from "../../../lib/errors/controller";
+const { DoesNotMatchError, enums } = controllerErrors;
 
 /*  validates the supplied token in the req body to ensure the token is a JWT token,
  *  not expired, nor tampered with.

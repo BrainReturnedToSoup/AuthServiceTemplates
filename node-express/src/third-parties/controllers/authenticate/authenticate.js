@@ -4,15 +4,16 @@ import models from "../../models/authenticate";
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
 import validateThirdPartyID from "../../../lib/utils/input-validators/thirdPartyID";
-import expGenerator from "../../../lib/utils/expGenerator";
-import encryptGrantID from "../../../lib/utils/cryptography/encrypt/grantID";
-import encryptThirdPartyID from "../../../lib/utils/cryptography/encrypt/thirdPartyID";
+import expGenerator from "../../../lib/utils/web-token/expGenerator";
+import encryptGrantID from "../../../lib/utils/crypto/web-token/encrypt/grantID";
+import encryptThirdPartyID from "../../../lib/utils/crypto/web-token/encrypt/thirdPartyID";
 
 import webToken from "../../../lib/utils/web-token/web-token";
-import bcrypt from "bcrypt";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
+import bcrypt from "bcrypt";
 
-import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
+import controllerErrors from "../../../lib/errors/controller";
+const { DoesNotMatchError, enums } = controllerErrors;
 
 /*  validates the supplied emailUsername, password, and third-party ID from the req body.
  *

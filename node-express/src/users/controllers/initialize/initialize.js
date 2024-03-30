@@ -3,8 +3,8 @@ import models from "../../models/initialize";
 
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
-
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
+
 import bcrypt from "bcrypt";
 
 /*  validates the supplied emailUsername and password
