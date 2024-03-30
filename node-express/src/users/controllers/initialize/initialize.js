@@ -4,7 +4,7 @@ import models from "../../models/initialize";
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
 
-import { v4 as uuidGenerator } from "uuid";
+import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import bcrypt from "bcrypt";
 
 /*  validates the supplied emailUsername and password
@@ -36,7 +36,7 @@ async function createUser(req) {
 
   const hashedPassword = await bcrypt.hash(password, "ADD SALT ROUNDS HERE");
 
-  req.userID = uuidGenerator();
+  req.userID = idGenerator();
 
   await models.createUser(req.userID, emailUsername, hashedPassword);
 }

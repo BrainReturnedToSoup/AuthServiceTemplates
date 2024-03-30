@@ -7,7 +7,7 @@ import expGenerator from "../../../lib/utils/web-token/expGenerator";
 import encryptGrantID from "../../../lib/utils/cryptography/encrypt/grantID";
 
 import bcrypt from "bcrypt";
-import { v4 as uuidGenerator } from "uuid";
+import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import webToken from "../../../lib/utils/web-token/web-token";
 
 import controllerErrors from "../../../lib/errors/controller";
@@ -71,8 +71,8 @@ async function comparePasswords(req) {
 async function createUserSession(req) {
   const { userID } = req.userData;
 
-  const grantID = uuidGenerator(),
-    jti = uuidGenerator(),
+  const grantID = idGenerator(),
+    jti = idGenerator(),
     exp = expGenerator();
 
   req.sessionData = await models.createSessionRecord(userID, grantID, jti, exp);

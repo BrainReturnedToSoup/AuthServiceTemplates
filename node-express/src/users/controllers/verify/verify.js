@@ -2,8 +2,7 @@ import errorHandler from "./errorHandler";
 import models from "../../models/verify";
 
 import decryptGrantID from "../../../lib/utils/cryptography/decrypt/grantID";
-import { v4 as uuidGenerator } from "uuid";
-
+import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import webToken from "../../../lib/utils/web-token/web-token";
 
 import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
@@ -78,7 +77,7 @@ function compareJti(req) {
 async function generateNewToken(req) {
   const { grantID } = req.decodedToken;
 
-  const newJti = uuidGenerator();
+  const newJti = idGenerator();
 
   await models.updateJti(grantID, newJti);
 

@@ -3,8 +3,7 @@ import models from "../../models/initialize";
 
 import validateThirdPartyName from "../../../lib/utils/input-validators/thirdPartyName";
 import validateThirdPartyURI from "../../../lib/utils/input-validators/thirdPartyURI";
-
-import { v4 as uuidGenerator } from "uuid";
+import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 
 /*  validates the supplied third-party name and URI
  *  from the body.
@@ -32,7 +31,7 @@ function validateInput(req) {
 async function createThirdParty(req) {
   const { name, uri } = req.body;
 
-  req.thirdPartyID = uuidGenerator();
+  req.thirdPartyID = idGenerator();
 
   await models.createThirdParty(req.thirdPartyID, name, uri);
 }

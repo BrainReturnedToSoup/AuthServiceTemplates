@@ -10,7 +10,7 @@ import encryptThirdPartyID from "../../../lib/utils/cryptography/encrypt/thirdPa
 
 import webToken from "../../../lib/utils/web-token/web-token";
 import bcrypt from "bcrypt";
-import { v4 as uuidGenerator } from "uuid";
+import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 
 import { DoesNotMatchError, enums } from "../../../lib/errors/controller";
 
@@ -89,7 +89,7 @@ async function createThirdPartySession(req) {
   const { userID } = req.userData,
     { thirdPartyID } = req.body;
 
-  const grantID = uuidGenerator(),
+  const grantID = idGenerator(),
     exp = expGenerator(),
     authorization = 1; //ADD A MECHANISM TO DEFINE THE AUTHORIZATION LEVEL LATER
 
