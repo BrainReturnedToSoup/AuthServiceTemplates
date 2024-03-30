@@ -4,8 +4,7 @@ import errorHandler from "./errorHandler";
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
 import validateUserID from "../../../lib/utils/input-validators/userID";
-
-import bcrypt from "bcrypt";
+import comparePasswords from "../../../lib/utils/crypto/password/compare";
 
 const password = {
   /*  validates the supplied user ID and password from the req body.
@@ -44,7 +43,7 @@ const password = {
     const { password } = req.body,
       { hashedPassword } = req;
 
-    req.matches = await bcrypt.compare(password, hashedPassword);
+    req.matches = await comparePasswords(password, hashedPassword);
   },
 };
 
