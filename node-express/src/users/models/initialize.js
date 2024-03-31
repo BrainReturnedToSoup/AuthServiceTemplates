@@ -1,5 +1,7 @@
 import pool from "../../../data-management/postgres-pool";
-import { DatabaseError } from "../../lib/errors/model";
+import modelErrors from "../../lib/errors/model";
+
+const { DatabaseError } = modelErrors;
 
 export default {
   createUser: async function (userID, emailUsername, hashedPassword) {

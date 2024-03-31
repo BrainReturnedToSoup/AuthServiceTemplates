@@ -1,9 +1,7 @@
 import pool from "../../../data-management/postgres-pool";
-import {
-  DatabaseError,
-  DataNotFoundError,
-  enums,
-} from "../../lib/errors/model";
+import modelErrors from "../../lib/errors/model";
+
+const { DatabaseError, DataNotFoundError, enums } = modelErrors;
 
 export default {
   getUserIDandHashedPw: async function (emailUsername) {

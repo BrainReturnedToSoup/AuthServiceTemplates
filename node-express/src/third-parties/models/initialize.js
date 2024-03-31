@@ -1,5 +1,7 @@
 import pool from "../../../data-management/postgres-pool";
-import { DatabaseError } from "../../lib/errors/model";
+import modelErrors from "../../lib/errors/model";
+
+const { DatabaseError } = modelErrors;
 
 export default {
   createThirdParty: async function (id, name, uri) {

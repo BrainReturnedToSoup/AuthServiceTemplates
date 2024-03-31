@@ -6,8 +6,8 @@ import validatePassword from "../../../lib/utils/input-validators/password";
 import expGenerator from "../../../lib/utils/web-token/expGenerator";
 import encryptGrantID from "../../../lib/utils/crypto/web-token/encrypt/grantID";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
-import webToken from "../../../lib/utils/web-token/web-token";
-import comparePasswords from "../../../lib/utils/crypto/password/compare";
+import webToken from "../../../lib/utils/web-token/webToken";
+import comparePasswordsUtil from "../../../lib/utils/crypto/password/compare";
 
 import controllerErrors from "../../../lib/errors/controller";
 const { DoesNotMatchError, enums } = controllerErrors;
@@ -46,7 +46,7 @@ async function comparePasswords(req) {
   const { password } = req.body,
     { hashedPassword } = req.userData;
 
-  const match = await comparePasswords(password, hashedPassword);
+  const match = await comparePasswordsUtil(password, hashedPassword);
 
   if (!match) throw new DoesNotMatchError(enums.DoesNotMatchError.PASSWORD);
 }
