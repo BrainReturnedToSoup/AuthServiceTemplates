@@ -7,8 +7,8 @@ import validateThirdPartyID from "../../../lib/utils/input-validators/thirdParty
 import expGenerator from "../../../lib/utils/web-token/expGenerator";
 import encryptGrantID from "../../../lib/utils/crypto/web-token/encrypt/grantID";
 import encryptThirdPartyID from "../../../lib/utils/crypto/web-token/encrypt/thirdPartyID";
-import webToken from "../../../lib/utils/web-token/web-token";
-import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
+import webToken from "../../../lib/utils/web-token/webToken";
+import idGenerator from "../../../lib/utils/id-generator/idGenerator";
 import comparePasswords from "../../../lib/utils/crypto/password/compare";
 
 import controllerErrors from "../../../lib/errors/controller";

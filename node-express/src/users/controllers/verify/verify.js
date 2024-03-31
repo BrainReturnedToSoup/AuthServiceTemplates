@@ -2,8 +2,8 @@ import models from "../../models/verify";
 import errorHandler from "./errorHandler";
 
 import decryptGrantID from "../../../lib/utils/crypto/web-token/decrypt/grantID";
-import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
-import webToken from "../../../lib/utils/web-token/web-token";
+import idGenerator from "../../../lib/utils/id-generator/idGenerator";
+import webToken from "../../../lib/utils/web-token/webToken";
 
 import controllerErrors from "../../../lib/errors/controller";
 const { DoesNotMatchError, enums } = controllerErrors;
