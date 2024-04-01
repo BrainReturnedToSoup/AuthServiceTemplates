@@ -5,7 +5,7 @@ class DoesNotMatchError extends Error {
   }
 }
 
-class ExistingRecord extends Error {
+class ExistingRecordError extends Error {
   constructor(message) {
     super(message);
     this.name = this.constructor.name;
@@ -21,4 +21,4 @@ const enums = Object.freeze({
   }),
 });
 
-export default { DoesNotMatchError, ExistingRecord, enums };
+export default { DoesNotMatchError, ExistingRecordError, enums };

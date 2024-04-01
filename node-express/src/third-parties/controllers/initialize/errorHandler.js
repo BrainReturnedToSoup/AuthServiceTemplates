@@ -8,8 +8,8 @@ export default function errorHandler(req, res, error) {
       handle.inputValidationError(req, res, error);
       break;
 
-    case error instanceof controllerErrors.ExistingRecord:
-      handle.existingRecord(req, res, error);
+    case error instanceof controllerErrors.ExistingRecordError:
+      handle.existingRecordError(req, res, error);
       break;
 
     case error instanceof modelErrors.DatabaseError:
@@ -23,7 +23,7 @@ export default function errorHandler(req, res, error) {
 
 const handle = {
   inputValidationError: function (req, res, error) {},
-  existingRecord: function (req, res, error) {},
+  existingRecordError: function (req, res, error) {},
   databaseError: function (req, res, error) {},
   serverError: function (req, res, error) {},
 };

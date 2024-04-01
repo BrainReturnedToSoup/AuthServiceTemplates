@@ -6,7 +6,7 @@ import validateThirdPartyURI from "../../../lib/utils/input-validators/thirdPart
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 
 import controllerErrors from "../../../lib/errors/controller";
-const { ExistingRecord } = controllerErrors;
+const { ExistingRecordError } = controllerErrors;
 
 /*  validates the supplied third-party name and URI
  *  from the body.
@@ -31,7 +31,7 @@ async function checkExistingThirdParty(req) {
 
   const existingThirdParty = await models.checkExistingThirdParty(name);
 
-  if (existingThirdParty) throw new ExistingRecord();
+  if (existingThirdParty) throw new ExistingRecordError();
 }
 
 /*  takes the third-party name and URI from the body to create a new third-party record in the 'third-party' table
