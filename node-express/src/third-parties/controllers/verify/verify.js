@@ -3,7 +3,7 @@ import models from "../../models/verify";
 
 import decryptGrantID from "../../../lib/utils/crypto/web-token/decrypt/grantID";
 import decryptThirdPartyID from "../../../lib/utils/crypto/web-token/decrypt/thirdPartyID";
-import webToken from "../../../lib/utils/web-token/web-token";
+import webToken from "../../../lib/utils/web-token/webToken";
 
 import controllerErrors from "../../../lib/errors/controller";
 const { DoesNotMatchError, enums } = controllerErrors;
