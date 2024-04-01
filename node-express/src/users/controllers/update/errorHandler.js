@@ -1,5 +1,5 @@
-import utilErrors from "../../../lib/errors/util/input-validation";
 import modelErrors from "../../../lib/errors/model";
+import inputValidationErrors from "../../../lib/errors/util/input-validation";
 
 export default {
   password: function (req, res, error) {
@@ -8,7 +8,7 @@ export default {
         handle.password.databaseError(req, res, error);
         break;
 
-      case error instanceof utilErrors.InputValidationError:
+      case error instanceof inputValidationErrors.InputValidationError:
         handle.password.inputValidationError(req, res, error);
         break;
 
@@ -23,7 +23,7 @@ export default {
         handle.emailUsername.databaseError(req, res, error);
         break;
 
-      case error instanceof utilErrors.InputValidationError:
+      case error instanceof inputValidationErrors.InputValidationError:
         handle.emailUsername.inputValidationError(req, res, error);
         break;
 

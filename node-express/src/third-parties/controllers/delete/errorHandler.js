@@ -1,9 +1,9 @@
-import utilErrors from "../../../lib/errors/util/input-validation";
 import modelErrors from "../../../lib/errors/model";
+import inputValidationErrors from "../../../lib/errors/util/input-validation";
 
 export default function errorHandler(req, res, error) {
   switch (true) {
-    case error instanceof utilErrors.InputValidationError:
+    case error instanceof inputValidationErrors.InputValidationError:
       handle.inputValidationError(req, res, error);
       break;
 
@@ -18,6 +18,8 @@ export default function errorHandler(req, res, error) {
 
 const handle = {
   inputValidationError: function (req, res, error) {},
+
   databaseError: function (req, res, error) {},
+  
   serverError: function (req, res, error) {},
 };

@@ -44,15 +44,21 @@ export default {
 const handle = {
   password: {
     databaseError: function (req, res, error) {},
+
     dataNotFoundError: function (req, res, error) {},
+
     inputValidationError: function (req, res, error) {},
+
     serverError: function (req, res, error) {},
   },
 
   emailUsername: {
     databaseError: function (req, res, error) {},
+
     dataNotFoundError: function (req, res, error) {},
+
     inputValidationError: function (req, res, error) {},
+    
     serverError: function (req, res, error) {},
   },
 };

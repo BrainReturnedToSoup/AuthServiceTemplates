@@ -1,10 +1,10 @@
-import utilErrors from "../../../lib/errors/util/input-validation";
-import modelErrors from "../../../lib/errors/model";
 import controllerErrors from "../../../lib/errors/controller";
+import modelErrors from "../../../lib/errors/model";
+import inputValidationErrors from "../../../lib/errors/util/input-validation";
 
 export default function errorHandler(req, res, error) {
   switch (true) {
-    case error instanceof utilErrors.InputValidationError:
+    case error instanceof inputValidationErrors.InputValidationError:
       handle.inputValidationError(req, res, error);
       break;
 

@@ -1,10 +1,10 @@
-import utilErrors from "../../../lib/errors/util/web-token";
-import modelErrors from "../../../lib/errors/model";
 import controllerErrors from "../../../lib/errors/controller";
+import modelErrors from "../../../lib/errors/model";
+import webTokenErrors from "../../../lib/errors/util/web-token";
 
 export default function errorHandler(req, res, error) {
   switch (true) {
-    case error instanceof utilErrors.TokenError:
+    case error instanceof webTokenErrors.TokenError:
       handle.tokenError(req, res, error);
       break;
 
