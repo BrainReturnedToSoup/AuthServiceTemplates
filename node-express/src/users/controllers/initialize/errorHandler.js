@@ -1,5 +1,6 @@
 import utilErrors from "../../../lib/errors/util/input-validation";
 import modelErrors from "../../../lib/errors/model";
+import controllerErrors from "../../../lib/errors/controller";
 
 export default function errorHandler(req, res, error) {
   switch (true) {
@@ -11,8 +12,8 @@ export default function errorHandler(req, res, error) {
       handle.databaseError(req, res, error);
       break;
 
-    case "ADD DATABASE ERROR FOR EXISTING USER":
-      "ADD HANDLER FOR EXISTING USER";
+    case error instanceof controllerErrors.ExistingUser:
+      handle.existingUser(req, res, error);
       break;
 
     default:
@@ -23,5 +24,6 @@ export default function errorHandler(req, res, error) {
 const handle = {
   inputValidationError: function (req, res, error) {},
   databaseError: function (req, res, error) {},
+  existingUser: function (req, res, error) {},
   serverError: function (req, res, error) {},
 };

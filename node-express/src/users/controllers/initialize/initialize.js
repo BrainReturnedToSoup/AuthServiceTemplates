@@ -6,6 +6,9 @@ import validatePassword from "../../../lib/utils/input-validators/password";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import hashPassword from "../../../lib/utils/crypto/password/hash";
 
+import controllerErrors from "../../../lib/errors/controller";
+const { ExistingUser } = controllerErrors;
+
 /*  validates the supplied emailUsername and password
  *  from the body.
  *
@@ -17,6 +20,19 @@ function validateInput(req) {
 
   validateEmailUsername(emailUsername);
   validatePassword(password);
+}
+
+/*  Takes the emailUsername and queries such against the DB, checking
+ *  for whether an existing user exists matching said emailUsername
+ *
+ *  This function only throws errors, as it does not modify the req object in any way.
+ */
+async function checkExistingUser(req) {
+  const { emailUsername } = req.body;
+
+  const existingUser = await models.checkExistingUser(emailUsername);
+
+  if (existingUser) throw new ExistingUser();
 }
 
 /*  takes the emailUsername and password from the body to create a new user record in the 'users' table
@@ -52,6 +68,7 @@ function respond(req, res) {
 export default async function initialize(req, res) {
   try {
     validateInput(req);
+    await checkExistingUser(req);
     await createUser(req);
     respond(req, res);
   } catch (error) {

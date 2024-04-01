@@ -5,6 +5,13 @@ class DoesNotMatchError extends Error {
   }
 }
 
+class ExistingUser extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
+
 const enums = Object.freeze({
   DoesNotMatchError: Object.freeze({
     EMAIL_USERNAME: 1,
@@ -14,4 +21,4 @@ const enums = Object.freeze({
   }),
 });
 
-export default { DoesNotMatchError, enums };
+export default { DoesNotMatchError, ExistingUser, enums };
