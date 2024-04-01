@@ -5,6 +5,9 @@ import validateThirdPartyName from "../../../lib/utils/input-validators/thirdPar
 import validateThirdPartyURI from "../../../lib/utils/input-validators/thirdPartyURI";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 
+import controllerErrors from "../../../lib/errors/controller";
+const { ExistingRecord } = controllerErrors;
+
 /*  validates the supplied third-party name and URI
  *  from the body.
  *
@@ -16,6 +19,19 @@ function validateInput(req) {
 
   validateThirdPartyName(name);
   validateThirdPartyURI(uri);
+}
+
+/*  Takes the third party name and queries such against the DB, checking
+ *  for whether an existing third party exists matching said name
+ *
+ *  This function only throws errors, as it does not modify the req object in any way.
+ */
+async function checkExistingThirdParty(req) {
+  const { name } = req.body;
+
+  const existingThirdParty = await models.checkExistingThirdParty(name);
+
+  if (existingThirdParty) throw new ExistingRecord();
 }
 
 /*  takes the third-party name and URI from the body to create a new third-party record in the 'third-party' table
@@ -48,6 +64,7 @@ function respond(req, res) {
 export default async function initialize(req, res) {
   try {
     validateInput(req);
+    await checkExistingThirdParty(req);
     await createThirdParty(req);
     respond(req, res);
   } catch (error) {

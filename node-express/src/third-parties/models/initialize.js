@@ -4,6 +4,28 @@ import modelErrors from "../../lib/errors/model";
 const { DatabaseError } = modelErrors;
 
 export default {
+  checkExistingThirdParty: async function (name) {
+    let connection, result, error;
+
+    try {
+      connection = await pool.connect();
+
+      result = await connection.oneOrNone(
+        `
+        `,
+        [name]
+      );
+    } catch (err) {
+      error = err;
+    } finally {
+      if (connection) {
+        await connection.done();
+      }
+    }
+
+    if (error) throw new DatabaseError(error.message);
+  },
+
   createThirdParty: async function (id, name, uri) {
     let connection, error;
 

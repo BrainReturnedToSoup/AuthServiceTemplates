@@ -7,7 +7,7 @@ import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import hashPassword from "../../../lib/utils/crypto/password/hash";
 
 import controllerErrors from "../../../lib/errors/controller";
-const { ExistingUser } = controllerErrors;
+const { ExistingRecord } = controllerErrors;
 
 /*  validates the supplied emailUsername and password
  *  from the body.
@@ -32,7 +32,7 @@ async function checkExistingUser(req) {
 
   const existingUser = await models.checkExistingUser(emailUsername);
 
-  if (existingUser) throw new ExistingUser();
+  if (existingUser) throw new ExistingRecord();
 }
 
 /*  takes the emailUsername and password from the body to create a new user record in the 'users' table
