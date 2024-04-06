@@ -1,5 +1,6 @@
 import modelErrors from "../../../lib/errors/model";
 import inputValidationErrors from "../../../lib/errors/util/input-validation";
+import inputValidationErrorEnums from "../../../lib/enums/error/util/input-validation";
 
 export default {
   password: function (req, res, error) {
@@ -58,7 +59,7 @@ const handle = {
     dataNotFoundError: function (req, res, error) {},
 
     inputValidationError: function (req, res, error) {},
-    
+
     serverError: function (req, res, error) {},
   },
 };

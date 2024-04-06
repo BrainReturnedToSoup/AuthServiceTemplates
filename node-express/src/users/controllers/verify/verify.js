@@ -5,8 +5,9 @@ import decryptGrantID from "../../../lib/utils/crypto/web-token/decrypt/grantID"
 import idGenerator from "../../../lib/utils/id-generator/idGenerator";
 import webToken from "../../../lib/utils/web-token/webToken";
 
-import controllerErrors from "../../../lib/errors/controller";
-const { DoesNotMatchError, enums } = controllerErrors;
+import errors from "../../../lib/errors/controller";
+import errorEnums from "../../../lib/enums/error/controller";
+const { DoesNotMatchError } = errors;
 
 /*  validates the supplied token in the req body to ensure the token is a JWT token,
  *  not expired, nor tampered with.
@@ -60,7 +61,7 @@ function compareJti(req) {
     { storedJti } = req;
 
   if (jti !== storedJti)
-    throw new DoesNotMatchError(enums.DoesNotMatchError.JTI);
+    throw new DoesNotMatchError(errorEnums.DoesNotMatchError.JTI);
 }
 
 /*  At this point, the original token is completely valid, thus it is time to generate a new token

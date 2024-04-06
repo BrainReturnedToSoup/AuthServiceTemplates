@@ -9,8 +9,9 @@ import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import webToken from "../../../lib/utils/web-token/webToken";
 import comparePasswordsUtil from "../../../lib/utils/crypto/password/compare";
 
-import controllerErrors from "../../../lib/errors/controller";
-const { DoesNotMatchError, enums } = controllerErrors;
+import errors from "../../../lib/errors/controller";
+import errorEnums from "../../../lib/enums/error/controller";
+const { DoesNotMatchError } = errors;
 
 /*  validates the supplied emailUsername and password from the req body.
  *
@@ -31,7 +32,7 @@ function validateInput(req) {
  *  req.userData.userID = retrieved user ID
  *  req.userData.hashedPassword = retrieved hashed password
  */
-async function getUserIDandPassword(req) {
+async function getUserIDandHashedPw(req) {
   const { emailUsername } = req.body;
 
   req.userData = await models.getUserIDandHashedPw(emailUsername);
@@ -48,7 +49,7 @@ async function comparePasswords(req) {
 
   const match = await comparePasswordsUtil(password, hashedPassword);
 
-  if (!match) throw new DoesNotMatchError(enums.DoesNotMatchError.PASSWORD);
+  if (!match) throw new DoesNotMatchError(errorEnums.DoesNotMatchError.PASSWORD);
 }
 
 /*  takes the user ID stored in req.userData and creates a new record in the 'in_app_grant' table
@@ -105,7 +106,7 @@ function respond(req, res) {
 export default async function authenticate(req, res) {
   try {
     validateInput(req);
-    await getUserIDandPassword(req);
+    await getUserIDandHashedPw(req);
     await comparePasswords(req);
     await createUserSession(req);
     createToken(req);

@@ -1,6 +1,7 @@
 import controllerErrors from "../../../lib/errors/controller";
 import modelErrors from "../../../lib/errors/model";
 import inputValidationErrors from "../../../lib/errors/util/input-validation";
+import inputValidationErrorEnums from "../../../lib/enums/error/util/input-validation";
 
 export default function errorHandler(req, res, error) {
   switch (true) {

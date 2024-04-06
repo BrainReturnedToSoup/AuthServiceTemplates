@@ -1,7 +1,7 @@
 import pool from "../../../data-management/postgres-pool";
 import modelErrors from "../../lib/errors/model";
-
-const { DatabaseError, DataNotFoundError, enums } = modelErrors;
+import modelErrorEnums from "../../lib/enums/error/model";
+const { DatabaseError, DataNotFoundError } = modelErrors;
 
 export default {
   getHashedPassword: async function (userID) {
@@ -28,7 +28,8 @@ export default {
 
     if (error) throw new DatabaseError(error.message);
 
-    if (!result) throw new DataNotFoundError(enums.DataNotFoundError.HASHED_PW);
+    if (!result)
+      throw new DataNotFoundError(modelErrorEnums.DataNotFoundError.HASHED_PW);
 
     return result.pw;
   },
@@ -58,7 +59,9 @@ export default {
     if (error) throw new DatabaseError(error.message);
 
     if (!result)
-      throw new DataNotFoundError(enums.DataNotFoundError.EMAIL_USERNAME);
+      throw new DataNotFoundError(
+        modelErrorEnums.DataNotFoundError.EMAIL_USERNAME
+      );
 
     return result.emailUsername;
   },

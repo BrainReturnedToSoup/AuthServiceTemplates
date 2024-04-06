@@ -1,6 +1,5 @@
 import pool from "../../../data-management/postgres-pool";
 import modelErrors from "../../lib/errors/model";
-
 const { DatabaseError } = modelErrors;
 
 export default {

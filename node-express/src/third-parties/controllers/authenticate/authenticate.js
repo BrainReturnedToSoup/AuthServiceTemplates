@@ -11,7 +11,7 @@ import webToken from "../../../lib/utils/web-token/webToken";
 import idGenerator from "../../../lib/utils/id-generator/idGenerator";
 import comparePasswords from "../../../lib/utils/crypto/password/compare";
 
-import controllerErrors from "../../../lib/errors/controller";
+import controllerErrors from "../../../lib/enums/errors/controller";
 const { DoesNotMatchError, enums } = controllerErrors;
 
 /*  validates the supplied emailUsername, password, and third-party ID from the req body.

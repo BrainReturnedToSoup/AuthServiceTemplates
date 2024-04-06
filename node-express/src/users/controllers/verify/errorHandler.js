@@ -1,6 +1,7 @@
 import controllerErrors from "../../../lib/errors/controller";
 import modelErrors from "../../../lib/errors/model";
 import webTokenErrors from "../../../lib/errors/util/web-token";
+import webTokenErrorEnums from "../../../lib/enums/error/util/web-token";
 
 export default function errorHandler(req, res, error) {
   switch (true) {

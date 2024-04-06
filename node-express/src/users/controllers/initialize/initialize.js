@@ -6,8 +6,8 @@ import validatePassword from "../../../lib/utils/input-validators/password";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import hashPassword from "../../../lib/utils/crypto/password/hash";
 
-import controllerErrors from "../../../lib/errors/controller";
-const { ExistingRecordError } = controllerErrors;
+import errors from "../../../lib/errors/controller";
+const { ExistingRecordError } = errors;
 
 /*  validates the supplied emailUsername and password
  *  from the body.
