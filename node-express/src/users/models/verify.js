@@ -1,7 +1,7 @@
 import pool from "../../../data-management/postgres-pool";
-import modelErrors from "../../lib/errors/model";
-import modelErrorEnums from "../../lib/enums/error/model";
-const { DatabaseError, DataNotFoundError } = modelErrors;
+import errors from "../../lib/errors/model";
+import errorEnums from "../../lib/enums/error/model";
+const { DatabaseError, DataNotFoundError } = errors;
 
 export default {
   getJti: async function (grantID) {
@@ -29,7 +29,7 @@ export default {
     if (error) throw new DatabaseError(error.message);
 
     if (!result)
-      throw new DataNotFoundError(modelErrorEnums.DataNotFoundError.JTI);
+      throw new DataNotFoundError(errorEnums.DataNotFoundError.JTI);
 
     return result.jti;
   },

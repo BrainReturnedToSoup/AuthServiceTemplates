@@ -1,7 +1,7 @@
 import pool from "../../../data-management/postgres-pool";
-import modelErrors from "../../lib/errors/model";
-
-const { DatabaseError, DataNotFoundError, enums } = modelErrors;
+import errors from "../../lib/errors/model";
+import errorEnums from "../../lib/enums/error/model";
+const { DatabaseError, DataNotFoundError } = errors;
 
 export default {
   getSessionIDs: async function (grantID) {
@@ -30,7 +30,7 @@ export default {
 
     if (!result)
       throw new DataNotFoundError(
-        enums.DataNotFoundError.USER_ID_THIRD_PARTY_ID
+        errorEnums.DataNotFoundError.USER_ID_THIRD_PARTY_ID
       );
 
     return { userID: result.user_id, thirdPartyID: result.third_party_id };
@@ -60,6 +60,6 @@ export default {
 
     if (error) throw new DatabaseError(error.message);
 
-    if (!result) throw new DataNotFoundError(enums.DataNotFoundError.USER_ID);
+    if (!result) throw new DataNotFoundError(errorEnums.DataNotFoundError.USER_ID);
   },
 };

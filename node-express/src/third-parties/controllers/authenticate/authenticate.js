@@ -11,8 +11,9 @@ import webToken from "../../../lib/utils/web-token/webToken";
 import idGenerator from "../../../lib/utils/id-generator/idGenerator";
 import comparePasswords from "../../../lib/utils/crypto/password/compare";
 
-import controllerErrors from "../../../lib/enums/errors/controller";
-const { DoesNotMatchError, enums } = controllerErrors;
+import errors from "../../../lib/errors/controller";
+import errorEnums from "../../../lib/enums/error/controller";
+const { DoesNotMatchError } = errors;
 
 /*  validates the supplied emailUsername, password, and third-party ID from the req body.
  *
@@ -66,7 +67,7 @@ async function comparePasswords(req) {
 
   const match = await comparePasswords(password, hashedPassword);
 
-  if (!match) throw new DoesNotMatchError(enums.DoesNotMatchError.PASSWORD);
+  if (!match) throw new DoesNotMatchError(errorEnums.DoesNotMatchError.PASSWORD);
 }
 
 /*  takes the user ID stored in req.userData and the third-party ID in the req body

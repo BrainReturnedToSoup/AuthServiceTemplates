@@ -1,6 +1,6 @@
 import pool from "../../../data-management/postgres-pool";
-import modelErrors from "../../lib/errors/model";
-const { DatabaseError } = modelErrors;
+import errors from "../../lib/errors/model";
+const { DatabaseError } = errors;
 
 export default {
   deleteUser: async function (userID) {

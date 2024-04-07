@@ -5,8 +5,8 @@ import validateThirdPartyName from "../../../lib/utils/input-validators/thirdPar
 import validateThirdPartyURI from "../../../lib/utils/input-validators/thirdPartyURI";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 
-import controllerErrors from "../../../lib/errors/controller";
-const { ExistingRecordError } = controllerErrors;
+import errors from "../../../lib/errors/controller";
+const { ExistingRecordError } = errors;
 
 /*  validates the supplied third-party name and URI
  *  from the body.
