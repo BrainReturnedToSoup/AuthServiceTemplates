@@ -49,7 +49,8 @@ async function comparePasswords(req) {
 
   const match = await comparePasswordsUtil(password, hashedPassword);
 
-  if (!match) throw new DoesNotMatchError(errorEnums.DoesNotMatchError.PASSWORD);
+  if (!match)
+    throw new DoesNotMatchError(errorEnums.DoesNotMatchError.PASSWORD);
 }
 
 /*  takes the user ID stored in req.userData and creates a new record in the 'in_app_grant' table

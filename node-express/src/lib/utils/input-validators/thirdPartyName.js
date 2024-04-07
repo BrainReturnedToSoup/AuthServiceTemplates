@@ -1,7 +1,7 @@
 import Joi from "joi";
-import utilErrors from "../../errors/util";
-
-const { InputValidationError, enums } = utilErrors;
+import errors from "../../errors/util/input-validation";
+import errorEnums from "../../enums/error/util/input-validation";
+const { InputValidationError } = errors;
 
 export default function validate(inputString) {
   const regexp = new RegExp(`^[a-zA-Z0-9_@]+$
@@ -14,5 +14,5 @@ export default function validate(inputString) {
   //uses DIP in order to decouple the app logic from the specific error objects thrown
   //by the JOI library.
   if (error)
-    throw new InputValidationError(enums.inputValidation.THIRD_PARTY_NAME);
+    throw new InputValidationError(errorEnums.inputValidation.THIRD_PARTY_NAME);
 }

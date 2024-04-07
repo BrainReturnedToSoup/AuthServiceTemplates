@@ -1,13 +1,11 @@
 const responseEnums = Object.freeze({
-  doesNotMatchError: "INVALID-CREDENTIALS",
-  databaseError: "DATABASE-ERROR:UNKNOWN",
+  doesNotMatchError: "DOES-NOT-MATCH",
+  databaseError: "DATABASE-ERROR",
   dataNotFoundError: "DATA-NOT-FOUND",
   inputValidationError: "INPUT-VALIDATION",
-  tokenError: {
-    notBefore: "TOKEN-ERROR:NOT-BEFORE",
-    unknown: "TOKEN-ERROR:UNKNOWN",
-  },
+  tokenError: "TOKEN-ERROR",
   serverError: "SERVER-ERROR",
+  existingRecord: "EXISTING-RECORD",
 });
 
 export default responseEnums;

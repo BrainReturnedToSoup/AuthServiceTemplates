@@ -1,7 +1,7 @@
 import Joi from "joi";
-import utilErrors from "../../errors/util";
-
-const { InputValidationError, enums } = utilErrors;
+import errors from "../../errors/util/input-validation";
+import errorEnums from "../../enums/error/util/input-validation";
+const { InputValidationError } = errors;
 
 export default function validate(inputString) {
   const schema = Joi.string().dataUri();
@@ -9,5 +9,5 @@ export default function validate(inputString) {
   const { error } = schema.validate(inputString);
 
   if (error)
-    throw new InputValidationError(enums.inputValidation.THIRD_PARTY_URI);
+    throw new InputValidationError(errorEnums.inputValidation.THIRD_PARTY_URI);
 }

@@ -2,7 +2,7 @@ import controllerErrors from "../../../lib/errors/controller";
 import modelErrors from "../../../lib/errors/model";
 import inputValidationErrors from "../../../lib/errors/util/input-validation";
 import webTokenErrors from "../../../lib/errors/util/web-token";
-import webTokenErrorEnums from "../../../lib/enums/error/util/web-token";
+import responseEnums from "../../../lib/enums/response/authenticate";
 
 export default function errorHandler(req, res, error) {
   switch (true) {
@@ -34,36 +34,46 @@ export default function errorHandler(req, res, error) {
 const handle = {
   doesNotMatchError: function (req, res, error) {
     //forbidden
-    res.status(403).send("INVALID-CREDENTIALS");
+    res.status(403).json({
+      message: responseEnums.doesNotMatchError,
+      details: error.message,
+    });
   },
 
   databaseError: function (req, res, error) {
     //some type of internal server error related to the DB operations
-    res.status(500).send("DATABASE-ERROR:UNKNOWN");
+    res
+      .status(500)
+      .json({ message: responseEnums.databaseError, details: error.message });
   },
 
   dataNotFoundError: function (req, res, error) {
     //data not found (user)
-    res.status(404).send("DATA-NOT-FOUND:USER");
+    res.status(404).json({
+      message: responseEnums.dataNotFoundError,
+      details: error.message,
+    });
   },
 
   inputValidationError: function (req, res, error) {
-    //not acceptable
-    res.status(406).send("INPUT-VALIDATION");
+    //bad request
+    res.status(400).json({
+      message: responseEnums.inputValidationError,
+      details: error.message,
+    });
   },
 
   tokenError: function (req, res, error) {
-    if (error.message == webTokenErrorEnums.NOT_BEFORE) {
-      //forbidden
-      res.status(403).send("TOKEN-ERROR:NOT-BEFORE");
-    } else {
-      //some type of internal server error related to tokens
-      res.status(500).send("TOKEN-ERROR:UNKNOWN");
-    }
+    //some type of internal server error related to token APIs
+    res
+      .status(500)
+      .json({ message: responseEnums.tokenError, details: error.message });
   },
 
   serverError: function (req, res, error) {
-    //internal server error
-    res.status(500).send("SERVER-ERROR:UNKNOWN");
+    //any unforeseen internal server error
+    res
+      .status(500)
+      .json({ message: responseEnums.serverError, details: error.message });
   },
 };

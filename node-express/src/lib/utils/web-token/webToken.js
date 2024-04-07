@@ -3,9 +3,10 @@ import jwt, {
   NotBeforeError,
   TokenExpiredError,
 } from "jsonwebtoken";
-import webTokenErrors from "../../errors/util/web-token";
 
-const { TokenError, enums } = webTokenErrors;
+import errors from "../../errors/util/web-token";
+import errorEnums from "../../enums/error/util/web-token";
+const { TokenError } = errors;
 
 const webToken = {
   sign: function (payload) {
@@ -27,20 +28,20 @@ const webToken = {
 
 //specific to the jsonwebtoken library
 function errorHandler(error) {
+  console.error(error);
+
   switch (true) {
     case error instanceof TokenExpiredError:
-      throw new TokenError(enums.EXPIRED);
+      throw new TokenError(errorEnums.EXPIRED);
 
     case error instanceof JsonWebTokenError:
-      console.error(error);
-      throw new TokenError(enums.INVALID);
+      throw new TokenError(errorEnums.INVALID);
 
     case error instanceof NotBeforeError:
-      throw new TokenError(enums.NOT_BEFORE);
+      throw new TokenError(errorEnums.NOT_BEFORE);
 
     default:
-      console.error(error);
-      throw new TokenError(enums.UNKNOWN);
+      throw new TokenError(errorEnums.UNKNOWN);
   }
 }
 
