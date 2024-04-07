@@ -1,49 +1,59 @@
 import modelErrors from "../../../lib/errors/model";
 import inputValidationErrors from "../../../lib/errors/util/input-validation";
-import inputValidationErrorEnums from "../../../lib/enums/error/util/input-validation";
+import responseEnums from "../../../lib/enums/response/response";
 
 export default {
   password: function (req, res, error) {
     switch (true) {
       case error instanceof modelErrors.DatabaseError:
-        handle.password.databaseError(req, res, error);
+        handle.databaseError(req, res, error);
         break;
 
       case error instanceof inputValidationErrors.InputValidationError:
-        handle.password.inputValidationError(req, res, error);
+        handle.inputValidationError(req, res, error);
         break;
 
       default:
-        handle.password.serverError(req, res, error);
+        handle.serverError(req, res, error);
     }
   },
 
   emailUsername: function (req, res, error) {
     switch (true) {
       case error instanceof modelErrors.DatabaseError:
-        handle.emailUsername.databaseError(req, res, error);
+        handle.databaseError(req, res, error);
         break;
 
       case error instanceof inputValidationErrors.InputValidationError:
-        handle.emailUsername.inputValidationError(req, res, error);
+        handle.inputValidationError(req, res, error);
         break;
 
       default:
-        handle.emailUsername.serverError(req, res, error);
+        handle.serverError(req, res, error);
     }
   },
 };
 
 const handle = {
-  password: {
-    databaseError: function (req, res, error) {},
-    inputValidationError: function (req, res, error) {},
-    serverError: function (req, res, error) {},
+  databaseError: function (req, res, error) {
+    //some type of internal server error related to the DB operations
+    res
+      .status(500)
+      .json({ message: responseEnums.databaseError, details: error.message });
   },
 
-  emailUsername: {
-    databaseError: function (req, res, error) {},
-    inputValidationError: function (req, res, error) {},
-    serverError: function (req, res, error) {},
+  inputValidationError: function (req, res, error) {
+    //bad request
+    res.status(400).json({
+      message: responseEnums.inputValidationError,
+      details: error.message,
+    });
+  },
+
+  serverError: function (req, res, error) {
+    //any unforeseen internal server error
+    res
+      .status(500)
+      .json({ message: responseEnums.serverError, details: error.message });
   },
 };

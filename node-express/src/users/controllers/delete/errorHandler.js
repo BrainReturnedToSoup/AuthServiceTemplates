@@ -1,6 +1,6 @@
 import modelErrors from "../../../lib/errors/model";
 import inputValidationErrors from "../../../lib/errors/util/input-validation";
-import responseEnums from "../../../lib/enums/response/authenticate";
+import responseEnums from "../../../lib/enums/response/response";
 
 export default function errorHandler(req, res, error) {
   switch (true) {
