@@ -34,7 +34,7 @@ const handle = {
     //conflict due to existing record (user) linked to supplied information
     res
       .status(409)
-      .json({ message: responseEnums.existingRecord, details: error.message });
+      .json({ message: responseEnums.existingRecordError, details: error.message });
   },
 
   inputValidationError: function (req, res, error) {

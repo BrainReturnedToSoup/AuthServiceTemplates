@@ -5,7 +5,7 @@ const responseEnums = Object.freeze({
   inputValidationError: "INPUT-VALIDATION",
   tokenError: "TOKEN-ERROR",
   serverError: "SERVER-ERROR",
-  existingRecord: "EXISTING-RECORD",
+  existingRecordError: "EXISTING-RECORD",
 });
 
 export default responseEnums;
