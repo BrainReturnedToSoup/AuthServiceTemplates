@@ -63,7 +63,7 @@ const emailUsername = {
  *  achieved only using a response status code, not any explicit payload.
  */
 function respond(res) {
-  res.status("CODE GOES HERE");
+  res.status(204).end();
 }
 
 export default {

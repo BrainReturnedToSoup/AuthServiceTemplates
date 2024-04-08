@@ -1,11 +1,9 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/initialize";
-
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
 import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
 import hashPassword from "../../../lib/utils/crypto/password/hash";
-
 import errors from "../../../lib/errors/controller";
 const { ExistingRecordError } = errors;
 
@@ -62,7 +60,7 @@ async function createUser(req) {
  *  res.body.userID = user ID generated
  */
 function respond(req, res) {
-  res.status("CODE GOES HERE").json({ userID: req.userID });
+  res.status(201).json({ userID: req.userID });
 }
 
 export default async function initialize(req, res) {

@@ -1,6 +1,5 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/delete";
-
 import validateUserID from "../../../lib/utils/input-validators/userID";
 
 /*  validates the supplied user ID from the route parameter 'id'.
@@ -29,7 +28,7 @@ async function deleteRecord(req) {
  *  achieved purely with response status codes corresponding to this route success.
  */
 function respond(res) {
-  res.status("CODE GOES HERE");
+  res.status(204).end();
 }
 
 export default async function deleteUser(req, res) {

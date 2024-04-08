@@ -1,75 +1,66 @@
 import modelErrors from "../../../lib/errors/model";
 import inputValidationErrors from "../../../lib/errors/util/input-validation";
 import responseEnums from "../../../lib/enums/response/response";
+import errorResponse from "../../../lib/utils/response/errorResponse";
 
 export default {
   password: function (req, res, error) {
     switch (true) {
       case error instanceof modelErrors.DatabaseError:
-        handle.databaseError(req, res, error);
+        handle.databaseError(res, error);
         break;
 
       case error instanceof modelErrors.DataNotFoundError:
-        handle.dataNotFoundError(req, res, error);
+        handle.dataNotFoundError(res, error);
         break;
 
       case error instanceof inputValidationErrors.InputValidationError:
-        handle.inputValidationError(req, res, error);
+        handle.inputValidationError(res, error);
         break;
 
       default:
-        handle.serverError(req, res, error);
+        handle.serverError(res, error);
     }
   },
 
   emailUsername: function (req, res, error) {
     switch (true) {
       case error instanceof modelErrors.DatabaseError:
-        handle.databaseError(req, res, error);
+        handle.databaseError(res, error);
         break;
 
       case error instanceof modelErrors.DataNotFoundError:
-        handle.dataNotFoundError(req, res, error);
+        handle.dataNotFoundError(res, error);
         break;
 
       case error instanceof inputValidationErrors.InputValidationError:
-        handle.inputValidationError(req, res, error);
+        handle.inputValidationError(res, error);
         break;
 
       default:
-        handle.serverError(req, res, error);
+        handle.serverError(res, error);
     }
   },
 };
 
 const handle = {
-  databaseError: function (req, res, error) {
+  databaseError: function (res, error) {
     //some type of internal server error related to the DB operations
-    res
-      .status(500)
-      .json({ message: responseEnums.databaseError, details: error.message });
+    errorResponse(res, 500, responseEnums.databaseError, error.message);
   },
 
-  dataNotFoundError: function (req, res, error) {
+  dataNotFoundError: function (res, error) {
     //data not found (password)
-    res.status(404).json({
-      message: responseEnums.dataNotFoundError,
-      details: error.message,
-    });
+    errorResponse(res, 404, responseEnums.dataNotFoundError, error.message);
   },
 
-  inputValidationError: function (req, res, error) {
-    //bad request 
-    res.status(400).json({
-      message: responseEnums.inputValidationError,
-      details: error.message,
-    });
+  inputValidationError: function (res, error) {
+    //bad request
+    errorResponse(res, 400, responseEnums.inputValidationError, error.message);
   },
 
-  serverError: function (req, res, error) {
+  serverError: function (res, error) {
     //any unforeseen internal server error
-    res
-      .status(500)
-      .json({ message: responseEnums.serverError, details: error.message });
+    errorResponse(res, 500, responseEnums.serverError, error.message);
   },
 };

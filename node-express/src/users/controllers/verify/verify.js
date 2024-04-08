@@ -95,9 +95,7 @@ async function generateNewToken(req) {
  * res.body.newToken = new token created.
  */
 function respond(req, res) {
-  const { newToken } = req;
-
-  res.status("CODE GOES HERE").json({ newToken });
+  res.status(201).json({ newToken: req.newToken });
 }
 
 export default async function verify(req, res) {

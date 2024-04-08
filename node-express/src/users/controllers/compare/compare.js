@@ -90,7 +90,7 @@ const emailUsername = {
  *  from the 'matches' property on the req object.
  */
 function respond(req, res) {
-  res.status("CODE GOES HERE").json({ matches: req.matches });
+  res.status(200).json({ matches: req.matches });
 }
 
 export default {
