@@ -130,7 +130,8 @@ function createToken(req) {
 /*  Finally, the token created is sent to he third-party via the URI linked to the third-party ID
  */
 function respond(req, res) {
-  res.status("CODE GOES HERE").json({ token: req.token });
+  //resource created
+  res.status(201).json({ token: req.token });
 }
 
 export default async function authenticate(req, res) {

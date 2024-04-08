@@ -58,7 +58,8 @@ async function createThirdParty(req) {
  *  res.body.id = third-party ID generated
  */
 function respond(req, res) {
-  res.status("ADD CODE HERE").json({ id: req.thirdPartyID });
+  //resource created
+  res.status(201).json({ id: req.thirdPartyID });
 }
 
 export default async function initialize(req, res) {

@@ -29,7 +29,8 @@ async function deleteRecord(req) {
  *  achieved purely with response status codes corresponding to this route success.
  */
 function respond(res) {
-  res.status("CODE GOES HERE");
+  //successful but no body content
+  res.status(204).end();
 }
 
 export default async function deleteThirdParty(req, res) {
