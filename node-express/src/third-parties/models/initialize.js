@@ -1,38 +1,22 @@
-import pool from "../../../data-management/postgres-pool";
+import dataManagementApis from "../../lib/utils/data-management/dataManagementApis";
 import errors from "../../lib/errors/model";
-const { DatabaseError } = errors;
+const {} = errors;
 
 export default {
-  checkExistingThirdParty: async function (name) {
-    let connection, result, error;
-
-    try {
-      connection = await pool.connect();
-
-      result = await connection.oneOrNone(
-        `
-        `,
-        [name]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
+  checkExistingRecord: async function (name) {
+    return await dataManagementApis.oneOrNone(
+      `
+      SELECT third_party_name
+      FROM third_parties
+      WHERE third_party_name = $1
+    `,
+      [name]
+    );
   },
 
   createThirdParty: async function (id, name, uri) {
-    let connection, error;
-
-    try {
-      connection = await pool.connect();
-
-      await connection.query(
-        `
+    return await dataManagementApis.queryNoReturn(
+      `
         INSERT INTO Third_Parties
         (
           third_party_id,
@@ -41,16 +25,7 @@ export default {
         )
         VALUES ($1, $2, $3)
         `,
-        [id, name, uri]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
+      [id, name, uri]
+    );
   },
 };

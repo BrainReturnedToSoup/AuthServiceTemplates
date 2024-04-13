@@ -12,4 +12,6 @@ class DataNotFoundError extends Error {
   }
 }
 
+
+
 export default { DataNotFoundError, DatabaseError };

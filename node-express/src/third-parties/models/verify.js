@@ -1,32 +1,18 @@
-import pool from "../../../data-management/postgres-pool";
+import dataManagementApis from "../../lib/utils/data-management/dataManagementApis";
 import errors from "../../lib/errors/model";
 import errorEnums from "../../lib/enums/error/model";
-const { DatabaseError, DataNotFoundError } = errors;
+const { DataNotFoundError } = errors;
 
 export default {
   getSessionIDs: async function (grantID) {
-    let connection, result, error;
-
-    try {
-      connection = await pool.connect();
-
-      result = await connection.oneOrNone(
-        `
-        SELECT user_id, third_party_id
-        FROM Third_Party_Sessions
-        WHERE grant_id = $1
-        `,
-        [grantID]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
+    const result = await dataManagementApis.oneOrNone(
+      `
+    SELECT user_id, third_party_id
+    FROM Third_Party_Sessions
+    WHERE grant_id = $1
+    `,
+      [grantID]
+    );
 
     if (!result)
       throw new DataNotFoundError(
@@ -37,29 +23,16 @@ export default {
   },
 
   verifyUserID: async function (userID) {
-    let connection, result, error;
+    const result = await dataManagementApis.oneOrNone(
+      `
+    SELECT user_id
+    FROM Users
+    WHERE user_id = $1
+    `,
+      [userID]
+    );
 
-    try {
-      connection = await pool.connect();
-
-      result = await connection.oneOrNone(
-        `
-        SELECT user_id
-        FROM Users
-        WHERE user_id = $1
-        `,
-        [userID]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
-
-    if (!result) throw new DataNotFoundError(errorEnums.DataNotFoundError.USER_ID);
+    if (!result)
+      throw new DataNotFoundError(errorEnums.DataNotFoundError.USER_ID);
   },
 };

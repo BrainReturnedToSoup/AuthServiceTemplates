@@ -29,7 +29,7 @@ function validateInput(req) {
 async function checkExistingThirdParty(req) {
   const { name } = req.body;
 
-  const existingThirdParty = await models.checkExistingThirdParty(name);
+  const existingThirdParty = await models.checkExistingRecord(name);
 
   if (existingThirdParty) throw new ExistingRecordError();
 }
