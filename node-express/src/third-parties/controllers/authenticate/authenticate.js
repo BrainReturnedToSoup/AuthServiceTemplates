@@ -67,7 +67,8 @@ async function comparePasswords(req) {
 
   const match = await comparePasswords(password, hashedPassword);
 
-  if (!match) throw new DoesNotMatchError(errorEnums.DoesNotMatchError.PASSWORD);
+  if (!match)
+    throw new DoesNotMatchError(errorEnums.DoesNotMatchError.PASSWORD);
 }
 
 /*  takes the user ID stored in req.userData and the third-party ID in the req body
@@ -113,12 +114,12 @@ async function createThirdPartySession(req) {
  *
  *  req.token = token just created
  */
-function createToken(req) {
+async function createToken(req) {
   const { grantID, exp } = req.sessionData,
     { thirdPartyID } = req.body;
 
-  const encryptedGrantID = encryptGrantID(grantID),
-    encryptedThirdPartyID = encryptThirdPartyID(thirdPartyID);
+  const encryptedGrantID = await encryptGrantID(grantID),
+    encryptedThirdPartyID = await encryptThirdPartyID(thirdPartyID);
 
   req.token = webToken.sign({
     grantID: encryptedGrantID,
@@ -141,7 +142,7 @@ export default async function authenticate(req, res) {
     await comparePasswords(req);
     await getURI(req);
     await createThirdPartySession(req);
-    createToken(req, res);
+    await createToken(req, res);
     respond(req, res);
   } catch (error) {
     errorHandler(req, res, error);
