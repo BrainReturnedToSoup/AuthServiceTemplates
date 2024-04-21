@@ -12,6 +12,11 @@ class DataNotFoundError extends Error {
   }
 }
 
+class ExistingRecordError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
 
-
-export default { DataNotFoundError, DatabaseError };
+export default { DataNotFoundError, DatabaseError, ExistingRecordError };

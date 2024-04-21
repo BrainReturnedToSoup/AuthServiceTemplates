@@ -1,10 +1,11 @@
 import dataManagementApis from "../../lib/utils/data-management/dataManagementApis";
 import errors from "../../lib/errors/model";
-const {} = errors;
+import errorEnums from "../../lib/enums/error/model";
+const { ExistingRecordError } = errors;
 
 export default {
   checkExistingRecord: async function (name) {
-    return await dataManagementApis.oneOrNone(
+    const exists = await dataManagementApis.oneOrNone(
       `
       SELECT third_party_name
       FROM third_parties
@@ -12,6 +13,9 @@ export default {
     `,
       [name]
     );
+
+    if (exists)
+      throw new ExistingRecordError(errorEnums.ExistingRecordError.THIRD_PARTY);
   },
 
   createThirdParty: async function (id, name, uri) {

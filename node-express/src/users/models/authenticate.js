@@ -1,32 +1,18 @@
-import pool from "../../../data-management/postgres-pool";
+import dataManagementApis from "../../lib/utils/data-management/dataManagementApis";
 import errors from "../../lib/errors/model";
 import errorEnums from "../../lib/enums/error/model";
-const { DatabaseError, DataNotFoundError } = errors;
+const { DataNotFoundError } = errors;
 
 export default {
   getUserIDandHashedPw: async function (emailUsername) {
-    let connection, result, error;
-
-    try {
-      connection = await pool.connect();
-
-      result = await connection.oneOrNone(
-        `
-        SELECT user_id, pw
-        FROM users
-        WHERE email_username = $1
-      `,
-        [emailUsername]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
+    const result = await dataManagementApis.oneOrNone(
+      `
+    SELECT user_id, pw
+    FROM users
+    WHERE email_username = $1
+  `,
+      [emailUsername]
+    );
 
     if (!result)
       throw new DataNotFoundError(
@@ -37,26 +23,12 @@ export default {
   },
 
   createSessionRecord: async function (userID, grantID, jti, exp) {
-    let connection, error;
-
-    try {
-      connection = await pool.connect();
-
-      await connection.query(
-        `
-        INSERT INTO User_Sessions (grant_id, user_id, jti, expiration)
-        VALUES ($1, $2, $3, $4)
-      `,
-        [userID, grantID, jti, exp]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
+    await dataManagementApis.queryNoReturn(
+      `
+    INSERT INTO User_Sessions (grant_id, user_id, jti, expiration)
+    VALUES ($1, $2, $3, $4)
+  `,
+      [userID, grantID, jti, exp]
+    );
   },
 };

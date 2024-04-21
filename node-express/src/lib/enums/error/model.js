@@ -8,6 +8,10 @@ const enums = Object.freeze({
     URI: "URI",
     USER_ID_THIRD_PARTY_ID: "USER_ID_THIRD_PARTY_ID",
   }),
+
+  ExistingRecordError: Object.freeze({
+    THIRD_PARTY: "THIRD-PARTY"
+  })
 });
 
 export default enums;

@@ -1,29 +1,13 @@
-import pool from "../../../data-management/postgres-pool";
-import errors from "../../lib/errors/model";
-const { DatabaseError } = errors;
+import dataManagementApis from "../../lib/utils/data-management/dataManagementApis";
 
 export default {
   deleteUser: async function (userID) {
-    let connection, error;
-
-    try {
-      connection = await pool.connect();
-
-      await connection.query(
-        `
+    await dataManagementApis.queryNoReturn(
+      `
         DELETE FROM Users
         WHERE user_id = $1
         `,
-        [userID]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
+      [userID]
+    );
   },
 };

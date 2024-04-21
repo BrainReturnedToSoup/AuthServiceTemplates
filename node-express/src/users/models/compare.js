@@ -1,32 +1,18 @@
-import pool from "../../../data-management/postgres-pool";
+import dataManagementApis from "../../lib/utils/data-management/dataManagementApis";
 import errors from "../../lib/errors/model";
 import errorEnums from "../../lib/enums/error/model";
-const { DatabaseError, DataNotFoundError } = errors;
+const { DataNotFoundError } = errors;
 
 export default {
   getHashedPassword: async function (userID) {
-    let connection, result, error;
-
-    try {
-      connection = await pool.connect();
-
-      result = await connection.oneOrNone(
-        `
-        SELECT pw
-        FROM Users
-        WHERE user_id = $1
-        `,
-        [userID]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
+    const result = await dataManagementApis.oneOrNone(
+      `
+      SELECT pw
+      FROM Users
+      WHERE user_id = $1
+      `,
+      [userID]
+    );
 
     if (!result)
       throw new DataNotFoundError(errorEnums.DataNotFoundError.HASHED_PW);
@@ -35,33 +21,17 @@ export default {
   },
 
   getEmailUsername: async function (userID) {
-    let connection, result, error;
-
-    try {
-      connection = await pool.connect();
-
-      result = await connection.oneOrNone(
-        `
-        SELECT email_username
-        FROM Users
-        WHERE user_id = $1
-        `,
-        [userID]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
+    const result = await dataManagementApis.oneOrNone(
+      `
+      SELECT email_username
+      FROM Users
+      WHERE user_id = $1
+      `,
+      [userID]
+    );
 
     if (!result)
-      throw new DataNotFoundError(
-        errorEnums.DataNotFoundError.EMAIL_USERNAME
-      );
+      throw new DataNotFoundError(errorEnums.DataNotFoundError.EMAIL_USERNAME);
 
     return result.emailUsername;
   },

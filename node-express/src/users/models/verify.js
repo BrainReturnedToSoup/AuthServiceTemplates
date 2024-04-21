@@ -1,61 +1,32 @@
-import pool from "../../../data-management/postgres-pool";
+import dataManagementApis from "../../lib/utils/data-management/dataManagementApis";
 import errors from "../../lib/errors/model";
 import errorEnums from "../../lib/enums/error/model";
-const { DatabaseError, DataNotFoundError } = errors;
+const { DataNotFoundError } = errors;
 
 export default {
   getJti: async function (grantID) {
-    let connection, result, error;
-
-    try {
-      connection = await pool.connect();
-
-      await connection.query(
-        `
+    const result = await dataManagementApis.oneOrNone(
+      `
         SELECT jti
         FROM User_Sessions
         WHERE grant_id = $1
         `,
-        [grantID]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
+      [grantID]
+    );
 
-    if (error) throw new DatabaseError(error.message);
-
-    if (!result)
-      throw new DataNotFoundError(errorEnums.DataNotFoundError.JTI);
+    if (!result) throw new DataNotFoundError(errorEnums.DataNotFoundError.JTI);
 
     return result.jti;
   },
 
   updateJti: async function (grantID, jti) {
-    let connection, error;
-
-    try {
-      connection = await pool.connect();
-
-      await connection.query(
-        `
-        UPDATE User_Sessions
-        SET jti = $1
-        WHERE grant_id = $2
-      `,
-        [jti, grantID]
-      );
-    } catch (err) {
-      error = err;
-    } finally {
-      if (connection) {
-        await connection.done();
-      }
-    }
-
-    if (error) throw new DatabaseError(error.message);
+    await dataManagementApis.queryNoReturn(
+      `
+      UPDATE User_Sessions
+      SET jti = $1
+      WHERE grant_id = $2
+    `,
+      [jti, grantID]
+    );
   },
 };
