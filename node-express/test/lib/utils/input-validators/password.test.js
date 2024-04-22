@@ -23,6 +23,8 @@ test("ensuring it determines invalid inputs as invalid", () => {
   const invalidInputs = [
     undefined,
     null,
+    " ",
+    "            ",
     "short",
     "loooooooooooooooooooooooooooong",
     "noNumbers!",
@@ -33,6 +35,8 @@ test("ensuring it determines invalid inputs as invalid", () => {
     "invalidSymbol]",
     "invalidSymbol<",
     "invalidSymbol(",
+    12365632,
+    3,
   ];
   let invalidAcc = 0;
 

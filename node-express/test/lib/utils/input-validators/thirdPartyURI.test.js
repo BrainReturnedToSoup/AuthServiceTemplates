@@ -32,6 +32,9 @@ test("ensuring it determines invalid inputs as invalid", () => {
     "urn:oasis:names:specification:docbook:dtd:xml:4.1.2",
     "ftp://ftp.is.co.za/rfc/rfc1808.txt",
     "ldap://[2001:db8::7]/c=GB?objectClass?one",
+    "",
+    " ",
+    "            ",
   ];
   let invalidAcc = 0;
 

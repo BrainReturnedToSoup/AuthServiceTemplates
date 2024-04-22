@@ -24,6 +24,8 @@ test("ensuring it determines invalid inputs as invalid", () => {
   const invalidInputs = [
     null,
     undefined,
+    " ",
+    "            ",
     "",
     "short",
     "looooooooooooooooooooooooooooooooooooooooooooong",

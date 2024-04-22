@@ -29,8 +29,11 @@ test("ensuring it determines invalid inputs as invalid", () => {
     "NOTVALID123@_!",
     "NOTVALID#",
     "notvalid&",
-    "          ",
+    12365632,
+    3,
     "",
+    " ",
+    "            ",
     127598123,
   ];
   let invalidAcc = 0;
