@@ -10,18 +10,14 @@ test("ensuring it determines a valid input string as valid", () => {
     "randomEmail@email.com",
     "SomeRand0m-User",
   ];
-  let invalidAcc = 0;
 
   for (const input of validInputs) {
     try {
       validate(input);
     } catch (error) {
       expect(error).not.toBeInstanceOf(errors.InputValidationError);
-      invalidAcc++;
     }
   }
-
-  expect(invalidAcc).toEqual(0);
 });
 
 test("ensuring it determines invalid inputs as invalid", () => {

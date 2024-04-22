@@ -10,14 +10,14 @@ export default function validate(inputString) {
   //the regexp for a string that contains atleast one uppercase, one lowercase,
   //a number, a special character, and is inclusively between 12 and 20 characters long
   const regexp =
-    new RegExp(`^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,20}$
-    `);
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
-  const schema = Joi.string().length(20).pattern(regexp);
+  const schema = Joi.string().min(12).max(20).pattern(regexp);
 
   const { error } = schema.validate(inputString);
 
   //uses DIP in order to decouple the app logic from the specific error objects thrown
   //by the JOI library.
-  if (error) throw new InputValidationError(errorEnums.inputValidation.PASSWORD);
+  if (error || !inputString)
+    throw new InputValidationError(errorEnums.PASSWORD);
 }
