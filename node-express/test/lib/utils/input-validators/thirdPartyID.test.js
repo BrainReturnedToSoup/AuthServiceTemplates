@@ -39,7 +39,6 @@ test("ensuring it determines invalid inputs as invalid", () => {
     try {
       validate(input);
     } catch (error) {
-      console.log("input", input);
       expect(error).toBeInstanceOf(errors.InputValidationError);
       expect(error.message).toEqual(errorEnums.THIRD_PARTY_ID);
       invalidAcc++;

@@ -7,7 +7,9 @@ const { InputValidationError } = errors;
 //the declared schema. This thrown error is handled in the controller catch block via the corresponding
 //error handler.
 export default function validate(inputString) {
-  const schema = Joi.string().guid({ version: ["uuidv4"] });
+  const schema = Joi.string()
+    .guid({ version: ["uuidv4"] })
+    .required();
 
   const { error } = schema.validate(inputString);
 

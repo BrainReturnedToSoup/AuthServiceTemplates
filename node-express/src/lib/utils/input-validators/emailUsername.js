@@ -10,12 +10,12 @@ export default function validate(inputString) {
   const schema = Joi.string()
     .min(8)
     .max(35)
-    .pattern(/^(?=.*[a-zA-Z0-9])[a-zA-Z0-9_.@-]+$/);
+    .pattern(/^(?=.*[a-zA-Z0-9])[a-zA-Z0-9_.@-]+$/)
+    .required();
 
   const { error } = schema.validate(inputString);
 
   //uses DIP in order to decouple the app logic from the specific error objects thrown
   //by the JOI library.
-  if (error || !inputString)
-    throw new InputValidationError(errorEnums.EMAIL_USERNAME);
+  if (error) throw new InputValidationError(errorEnums.EMAIL_USERNAME);
 }

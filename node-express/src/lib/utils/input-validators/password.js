@@ -12,12 +12,11 @@ export default function validate(inputString) {
   const regexp =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
 
-  const schema = Joi.string().min(12).max(20).pattern(regexp);
+  const schema = Joi.string().min(12).max(20).pattern(regexp).required();
 
   const { error } = schema.validate(inputString);
 
   //uses DIP in order to decouple the app logic from the specific error objects thrown
   //by the JOI library.
-  if (error || !inputString)
-    throw new InputValidationError(errorEnums.PASSWORD);
+  if (error) throw new InputValidationError(errorEnums.PASSWORD);
 }
