@@ -8,18 +8,18 @@ import {
   DecryptError,
 } from "../../../errors/util/encrypt-decrypt";
 
-async function random12Bytes() {
-  return await promiseRandomBytes(12);
+async function random16Bytes() {
+  return await promiseRandomBytes(16);
 }
 
-function encryptBuilder(key) {
+function encryptBuilder(keyHex) {
   return async function encrypt(string) {
     try {
-      const ivBuffer = await random12Bytes(),
-        keyBuffer = Buffer.from(key, "utf-8"),
+      const ivBuffer = await random16Bytes(),
+        keyBuffer = Buffer.from(keyHex, "hex"),
         ivHex = ivBuffer.toString("hex");
 
-      const cipher = createCipheriv("aes-256-gcm", keyBuffer, ivBuffer);
+      const cipher = createCipheriv("aes-256-ctr", keyBuffer, ivBuffer);
 
       let encrypted = cipher.update(string, "utf-8", "hex");
       encrypted += cipher.final("hex");
@@ -31,15 +31,15 @@ function encryptBuilder(key) {
   };
 }
 
-function decryptBuilder(key) {
+function decryptBuilder(keyHex) {
   return async function decrypt(hexString) {
     try {
       const [cipherText, ivHex] = hexString.split(":");
 
       const ivBuffer = Buffer.from(ivHex, "hex"),
-        keyBuffer = Buffer.from(key, "utf-8");
+        keyBuffer = Buffer.from(keyHex, "hex");
 
-      const decipher = createDecipheriv("aes-256-gcm", keyBuffer, ivBuffer);
+      const decipher = createDecipheriv("aes-256-ctr", keyBuffer, ivBuffer);
 
       let decrypted = decipher.update(cipherText, "hex", "utf-8");
       decrypted += decipher.final("utf-8");
