@@ -9,5 +9,5 @@ export default function validate(inputString) {
   const { error } = schema.validate(inputString);
 
   if (error)
-    throw new InputValidationError(errorEnums.inputValidation.THIRD_PARTY_URI);
+    throw new InputValidationError(errorEnums.THIRD_PARTY_URI);
 }

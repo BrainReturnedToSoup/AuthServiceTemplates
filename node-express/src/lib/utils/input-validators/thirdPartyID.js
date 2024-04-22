@@ -13,6 +13,6 @@ export default function validate(inputString) {
 
   //uses DIP in order to decouple the app logic from the specific error objects thrown
   //by the JOI library.
-  if (error)
-    throw new InputValidationError(errorEnums.inputValidation.THIRD_PARTY_ID);
+  if (error || !inputString)
+    throw new InputValidationError(errorEnums.THIRD_PARTY_ID);
 }

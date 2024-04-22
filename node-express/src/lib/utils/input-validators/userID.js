@@ -11,5 +11,5 @@ export default function validate(inputString) {
 
   const { error } = schema.validate(inputString);
 
-  if (error) throw new InputValidationError(errorEnums.inputValidation.USER_ID);
+  if (error) throw new InputValidationError(errorEnums.USER_ID);
 }
