@@ -4,7 +4,7 @@ import inputValidationErrors from "../../../lib/errors/util/input-validation";
 import responseEnums from "../../../lib/enums/response/response";
 import errorResponse from "../../../lib/utils/response/errorResponse";
 
-export default function errorResponse(req, res, error) {
+export default function errorHandler(req, res, error) {
   switch (true) {
     case error instanceof modelErrors.DatabaseError:
       handle.databaseError(res, error);

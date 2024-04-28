@@ -1,4 +1,4 @@
-import errorHandler from "./errorHandler";
+import errorHandlers from "./errorHandler";
 import models from "../../models/update";
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
@@ -72,7 +72,7 @@ export default {
       await password.update(req);
       respond(res);
     } catch (error) {
-      errorHandler.password(req, res, error);
+      errorHandlers.password(req, res, error);
     }
   },
 
@@ -82,7 +82,7 @@ export default {
       await emailUsername.update(req);
       respond(res);
     } catch (error) {
-      errorHandler.emailUsername(req, res, error);
+      errorHandlers.emailUsername(req, res, error);
     }
   },
 };

@@ -1,4 +1,4 @@
-import errorResponse from "./errorHandler";
+import errorHandler from "./errorHandler";
 import models from "../../models/initialize";
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
@@ -70,6 +70,6 @@ export default async function initialize(req, res) {
     await createUser(req);
     respond(req, res);
   } catch (error) {
-    errorResponse(req, res, error);
+    errorHandler(req, res, error);
   }
 }

@@ -4,7 +4,6 @@ import inputValidationErrors from "../../../lib/enums/error/util/input-validatio
 import responseEnums from "../../../lib/enums/response/response";
 import errorResponse from "../../../lib/utils/response/errorResponse";
 
-
 export default function errorHandler(req, res, error) {
   switch (true) {
     case error instanceof inputValidationErrors.InputValidationError:
