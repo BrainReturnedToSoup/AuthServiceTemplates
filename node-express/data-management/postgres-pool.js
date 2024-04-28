@@ -3,12 +3,11 @@ import pgp from "pg-promise";
 const poolConstructor = pgp();
 
 const config = {
-  user: "",
-  host: "",
-  database: "",
-  password: "",
-  port: "",
-  max: "",
+  user: "postgres",
+  host: "localhost",
+  database: "nodejs_auth_service",
+  port: 5432,
+  max: 100,
 };
 
 const pool = poolConstructor(config);

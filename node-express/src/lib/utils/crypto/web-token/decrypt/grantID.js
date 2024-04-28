@@ -1,4 +1,5 @@
 import { decryptBuilder } from "../aesctrBuilders";
-const decrypt = decryptBuilder("SYM KEY HERE");
+
+const decrypt = decryptBuilder(process.env.GRANT_ID_KEY);
 
 export default decrypt;

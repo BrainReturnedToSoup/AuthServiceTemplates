@@ -1,9 +1,4 @@
-import jwt, {
-  JsonWebTokenError,
-  NotBeforeError,
-  TokenExpiredError,
-} from "jsonwebtoken";
-
+import jwt from "jsonwebtoken";
 import errors from "../../errors/util/web-token";
 import errorEnums from "../../enums/error/util/webToken";
 const { TokenError } = errors;
@@ -11,7 +6,7 @@ const { TokenError } = errors;
 const webToken = {
   sign: function (payload) {
     try {
-      return jwt.sign(payload, "SECRET KEY HERE");
+      return jwt.sign(payload, process.env.WEB_TOKEN_KEY);
     } catch (error) {
       errorHandler(error);
     }
@@ -19,7 +14,7 @@ const webToken = {
 
   verify: function (token) {
     try {
-      return jwt.verify(token, "SECRET KEY HERE");
+      return jwt.verify(token, process.env.WEB_TOKEN_KEY);
     } catch (error) {
       errorHandler(error);
     }
@@ -31,13 +26,13 @@ function errorHandler(error) {
   console.error(error);
 
   switch (true) {
-    case error instanceof TokenExpiredError:
+    case error instanceof jwt.TokenExpiredError:
       throw new TokenError(errorEnums.EXPIRED);
 
-    case error instanceof JsonWebTokenError:
+    case error instanceof jwt.JsonWebTokenError:
       throw new TokenError(errorEnums.INVALID);
 
-    case error instanceof NotBeforeError:
+    case error instanceof jwt.NotBeforeError:
       throw new TokenError(errorEnums.NOT_BEFORE);
 
     default:

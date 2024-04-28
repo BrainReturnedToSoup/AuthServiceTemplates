@@ -1,4 +1,5 @@
 import { encryptBuilder } from "../aesctrBuilders";
-const encrypt = encryptBuilder("SYM KEY HERE");
+
+const encrypt = encryptBuilder(process.env.THIRD_PARTY_ID_KEY);
 
 export default encrypt;

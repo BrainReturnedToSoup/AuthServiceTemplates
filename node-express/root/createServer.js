@@ -1,3 +1,4 @@
+import "dotenv";
 import "../data-management/postgres-pool"; //init the DB pool as soon as possible
 
 import express from "express";
@@ -11,6 +12,8 @@ function createServer() {
 
   app.use(bodyParser.json()); //for parsing the bodies of requests as JSON automatically
   app.use("/", rootRouter);
+
+  return app;
 }
 
 export default createServer;
