@@ -5,7 +5,7 @@ import jwt, {
 } from "jsonwebtoken";
 
 import errors from "../../errors/util/web-token";
-import errorEnums from "../../enums/error/util/web-token";
+import errorEnums from "../../enums/error/util/webToken";
 const { TokenError } = errors;
 
 const webToken = {

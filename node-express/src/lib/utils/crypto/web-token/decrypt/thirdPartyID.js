@@ -1,4 +1,4 @@
-import { decryptBuilder } from "../aesgcmBuilders";
+import { decryptBuilder } from "../aesctrBuilders";
 const decrypt = decryptBuilder("SYM KEY HERE");
 
 export default decrypt;

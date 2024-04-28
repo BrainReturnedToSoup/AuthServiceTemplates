@@ -1,6 +1,6 @@
-import controllerErrors from "../../../lib/errors/controller";
-import modelErrors from "../../../lib/errors/model";
-import webTokenErrors from "../../../lib/errors/util/web-token";
+import controllerErrors from "../../../lib/enums/error/controller";
+import modelErrors from "../../../lib/enums/error/model";
+import webTokenErrors from "../../../lib/enums/error/util/webToken";
 import responseEnums from "../../../lib/enums/response/response";
 import errorResponse from "../../../lib/utils/response/errorResponse";
 

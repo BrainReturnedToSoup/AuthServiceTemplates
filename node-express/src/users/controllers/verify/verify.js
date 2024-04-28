@@ -1,10 +1,8 @@
 import models from "../../models/verify";
 import errorHandler from "./errorHandler";
-
 import decryptGrantID from "../../../lib/utils/crypto/web-token/decrypt/grantID";
 import idGenerator from "../../../lib/utils/id-generator/idGenerator";
 import webToken from "../../../lib/utils/web-token/webToken";
-
 import errors from "../../../lib/errors/controller";
 import errorEnums from "../../../lib/enums/error/controller";
 const { DoesNotMatchError } = errors;

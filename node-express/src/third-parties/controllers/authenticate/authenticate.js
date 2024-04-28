@@ -9,7 +9,7 @@ import encryptGrantID from "../../../lib/utils/crypto/web-token/encrypt/grantID"
 import encryptThirdPartyID from "../../../lib/utils/crypto/web-token/encrypt/thirdPartyID";
 import webToken from "../../../lib/utils/web-token/webToken";
 import idGenerator from "../../../lib/utils/id-generator/idGenerator";
-import comparePasswords from "../../../lib/utils/crypto/password/compare";
+import comparePasswordsUtil from "../../../lib/utils/crypto/password/compare";
 
 import errors from "../../../lib/errors/controller";
 import errorEnums from "../../../lib/enums/error/controller";
@@ -65,7 +65,7 @@ async function comparePasswords(req) {
   const { password } = req.body,
     { hashedPassword } = req.userData;
 
-  const match = await comparePasswords(password, hashedPassword);
+  const match = await comparePasswordsUtil(password, hashedPassword);
 
   if (!match)
     throw new DoesNotMatchError(errorEnums.DoesNotMatchError.PASSWORD);

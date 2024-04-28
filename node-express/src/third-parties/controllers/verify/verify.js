@@ -1,10 +1,8 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/verify";
-
 import decryptGrantID from "../../../lib/utils/crypto/web-token/decrypt/grantID";
 import decryptThirdPartyID from "../../../lib/utils/crypto/web-token/decrypt/thirdPartyID";
 import webToken from "../../../lib/utils/web-token/webToken";
-
 import errors from "../../../lib/errors/controller";
 import errorEnums from "../../../lib/enums/error/controller";
 const { DoesNotMatchError } = errors;

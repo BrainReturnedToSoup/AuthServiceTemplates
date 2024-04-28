@@ -4,7 +4,7 @@ import inputValidationErrors from "../../../lib/errors/util/input-validation";
 import responseEnums from "../../../lib/enums/response/response";
 import errorResponse from "../../../lib/utils/response/errorResponse";
 
-export default function errorHandler(req, res, error) {
+export default function errorResponse(req, res, error) {
   switch (true) {
     case error instanceof modelErrors.DatabaseError:
       handle.databaseError(res, error);
@@ -26,21 +26,21 @@ export default function errorHandler(req, res, error) {
 const handle = {
   databaseError: function (res, error) {
     //some type of internal server error related to the DB operations
-    errorHandler(res, 500, responseEnums.databaseError, error.message);
+    errorResponse(res, 500, responseEnums.databaseError, error.message);
   },
 
   existingRecordError: function (res, error) {
     //conflict due to existing record (user) linked to supplied information
-    errorHandler(res, 409, responseEnums.existingRecordError, error.message);
+    errorResponse(res, 409, responseEnums.existingRecordError, error.message);
   },
 
   inputValidationError: function (res, error) {
     //bad request
-    errorHandler(res, 400, responseEnums.inputValidationError, error.message);
+    errorResponse(res, 400, responseEnums.inputValidationError, error.message);
   },
 
   serverError: function (res, error) {
     //any unforeseen internal server error
-    errorHandler(res, 500, responseEnums.serverError, error.message);
+    errorResponse(res, 500, responseEnums.serverError, error.message);
   },
 };

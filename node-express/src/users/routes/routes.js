@@ -1,5 +1,4 @@
 import express from "express";
-
 import verify from "../controllers/verify/verify";
 import update from "../controllers/update/update";
 import initialize from "../controllers/initialize/initialize";

@@ -1,10 +1,8 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/initialize";
-
 import validateThirdPartyName from "../../../lib/utils/input-validators/thirdPartyName";
 import validateThirdPartyURI from "../../../lib/utils/input-validators/thirdPartyURI";
-import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
-
+import idGenerator from "../../../lib/utils/id-generator/idGenerator";
 import errors from "../../../lib/errors/controller";
 const { ExistingRecordError } = errors;
 

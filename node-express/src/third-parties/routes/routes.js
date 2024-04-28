@@ -1,5 +1,4 @@
 import express from "express";
-
 import authenticate from "../controllers/authenticate/authenticate";
 import deleteThirdParty from "../controllers/delete/delete";
 import initialize from "../controllers/initialize/initialize";

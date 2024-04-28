@@ -1,5 +1,5 @@
 import modelErrors from "../../../lib/errors/model";
-import inputValidationErrors from "../../../lib/errors/util/input-validation";
+import inputValidationErrors from "../../../lib/enums/error/util/input-validation";
 import responseEnums from "../../../lib/enums/response/response";
 import errorResponse from "../../../lib/utils/response/errorResponse";
 

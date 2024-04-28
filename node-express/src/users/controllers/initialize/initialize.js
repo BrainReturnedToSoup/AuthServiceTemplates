@@ -1,8 +1,8 @@
-import errorHandler from "./errorHandler";
+import errorResponse from "./errorHandler";
 import models from "../../models/initialize";
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
-import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
+import idGenerator from "../../../lib/utils/id-generator/idGenerator";
 import hashPassword from "../../../lib/utils/crypto/password/hash";
 import errors from "../../../lib/errors/controller";
 const { ExistingRecordError } = errors;
@@ -70,6 +70,6 @@ export default async function initialize(req, res) {
     await createUser(req);
     respond(req, res);
   } catch (error) {
-    errorHandler(req, res, error);
+    errorResponse(req, res, error);
   }
 }

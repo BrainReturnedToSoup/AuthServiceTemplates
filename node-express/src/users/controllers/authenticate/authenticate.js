@@ -1,14 +1,12 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/authenticate";
-
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
 import expGenerator from "../../../lib/utils/web-token/expGenerator";
 import encryptGrantID from "../../../lib/utils/crypto/web-token/encrypt/grantID";
-import idGenerator from "../../../lib/utils/idGenerator/idGenerator";
+import idGenerator from "../../../lib/utils/id-generator/idGenerator";
 import webToken from "../../../lib/utils/web-token/webToken";
 import comparePasswordsUtil from "../../../lib/utils/crypto/password/compare";
-
 import errors from "../../../lib/errors/controller";
 import errorEnums from "../../../lib/enums/error/controller";
 const { DoesNotMatchError } = errors;

@@ -1,6 +1,5 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/delete";
-
 import validateThirdPartyID from "../../../lib/utils/input-validators/thirdPartyID";
 
 /*  validates the supplied third-party ID from the URI parameter 'id'.

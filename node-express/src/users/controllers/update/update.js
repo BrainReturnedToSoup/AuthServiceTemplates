@@ -1,6 +1,5 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/update";
-
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
 import validateUserID from "../../../lib/utils/input-validators/userID";

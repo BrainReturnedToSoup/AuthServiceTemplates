@@ -9,7 +9,7 @@ import rootRouter from "./router";
 function createServer() {
   const app = express();
 
-  app.use(bodyParser); //for parsing the bodies of requests as JSON automatically
+  app.use(bodyParser.json()); //for parsing the bodies of requests as JSON automatically
   app.use("/", rootRouter);
 }
 
