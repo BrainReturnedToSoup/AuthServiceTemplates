@@ -1,15 +1,9 @@
-import "../data-management/postgres-pool"; //init the DB pool as soon as possible
+import createServer from "./createServer";
 
-import express from "express";
-import bodyParser from "body-parser";
-import rootRouter from "./router";
-
-const app = express();
 const PORT = 8080;
 
-app.use(bodyParser); //for parsing the bodies of requests as JSON automatically
-app.use("/", rootRouter);
+const server = createServer();
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is active, listening on port ${PORT}`);
 });
