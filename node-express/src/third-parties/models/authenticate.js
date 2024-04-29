@@ -7,7 +7,7 @@ export default {
   getURI: async function (thirdPartyID) {
     const result = await dataManagementApis.oneOrNone(
       `
-    SELECT uri
+    SELECT third_party_uri
     FROM Third_Parties
     WHERE third_party_id = $1
     `,
@@ -50,8 +50,8 @@ export default {
       user_id,
       grant_id,
       third_party_id,
-      authorization,
-      exp
+      auth,
+      expiration
     )
    VALUES ($1, $2, $3, $4, $5) `,
       [userID, grantID, thirdPartyID, authorization, exp]

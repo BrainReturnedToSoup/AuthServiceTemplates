@@ -34,8 +34,8 @@ const handle = {
   },
 
   existingRecordError: function (res, error) {
-    //forbidden because a third-party corresponding to the supplied info exists
-    errorResponse(res, 403, responseEnums.existingRecordError, error.message);
+    //conflict due to existing record (third-party) linked to supplied information
+    errorResponse(res, 409, responseEnums.existingRecordError, error.message);
   },
 
   serverError: function (req, res, error) {

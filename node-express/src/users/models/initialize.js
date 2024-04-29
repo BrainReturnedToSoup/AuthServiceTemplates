@@ -1,18 +1,21 @@
 import dataManagementApis from "../../lib/utils/data-management/dataManagementApis";
+import errors from "../../lib/errors/model";
+import errorEnums from "../../lib/enums/error/model";
+const { ExistingRecordError } = errors;
 
 export default {
   checkExistingUser: async function (emailUsername) {
-    return (
-      result !==
-      (await dataManagementApis.oneOrNone(
-        `
-        SELECT emailUsername
+    const exists = await dataManagementApis.oneOrNone(
+      `
+        SELECT email_username
         FROM users
-        WHERE emailUsername = $1
+        WHERE email_username = $1
         `,
-        [emailUsername]
-      ))
+      [emailUsername]
     );
+
+    if (exists)
+      throw new ExistingRecordError(errorEnums.ExistingRecordError.USER);
   },
 
   createUser: async function (userID, emailUsername, hashedPassword) {

@@ -68,7 +68,7 @@ describe("Creation of a generic third-party origin: POST /third-parties", () => 
     await supertest(testServer)
       .post("/third-parties")
       .send({ name: "validName", uri: "https://example.com/test" })
-      .expect(403);
+      .expect(409);
 
     await supertest(testServer)
       .delete(`/third-parties/${res.body.id}`)

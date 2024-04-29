@@ -10,7 +10,8 @@ const enums = Object.freeze({
   }),
 
   ExistingRecordError: Object.freeze({
-    THIRD_PARTY: "THIRD-PARTY"
+    THIRD_PARTY: "THIRD-PARTY",
+    USER: "USER"
   })
 });
 

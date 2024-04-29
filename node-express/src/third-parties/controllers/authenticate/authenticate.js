@@ -90,18 +90,18 @@ async function createThirdPartySession(req) {
     { thirdPartyID } = req.body;
 
   const grantID = idGenerator(),
-    exp = expGenerator(),
-    authorization = 1; //ADD A MECHANISM TO DEFINE THE AUTHORIZATION LEVEL LATER
+    expiration = expGenerator(),
+    auth = 1; //ADD A MECHANISM TO DEFINE THE AUTHORIZATION LEVEL LATER
 
   await models.createThirdPartySession(
     userID,
     thirdPartyID,
     grantID,
-    authorization,
-    exp
+    auth,
+    new Date(expiration * 1000)
   );
 
-  req.sessionData = { grantID, exp, authorization };
+  req.sessionData = { grantID, expiration, auth };
 }
 
 /*  takes the grant ID, third-party ID, and expiry value saved under req.sessionData and req.body and puts
@@ -113,7 +113,7 @@ async function createThirdPartySession(req) {
  *  req.token = token just created
  */
 async function createToken(req) {
-  const { grantID, exp } = req.sessionData,
+  const { grantID, expiration } = req.sessionData,
     { thirdPartyID } = req.body;
 
   const encryptedGrantID = await encryptGrantID(grantID),
@@ -122,7 +122,7 @@ async function createToken(req) {
   req.token = webToken.sign({
     grantID: encryptedGrantID,
     thirdPartyID: encryptedThirdPartyID,
-    exp,
+    expiration,
   });
 }
 

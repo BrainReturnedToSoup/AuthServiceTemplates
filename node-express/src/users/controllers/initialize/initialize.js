@@ -28,9 +28,7 @@ function validateInput(req) {
 async function checkExistingUser(req) {
   const { emailUsername } = req.body;
 
-  const existingUser = await models.checkExistingUser(emailUsername);
-
-  if (existingUser) throw new ExistingRecordError();
+  await models.checkExistingUser(emailUsername);
 }
 
 /*  takes the emailUsername and password from the body to create a new user record in the 'users' table
