@@ -1,3 +1,6 @@
+import { config } from "dotenv"
+config();
+
 import comparePasswords from "../../../../../src/lib/utils/crypto/password/compare";
 import hashPassword from "../../../../../src/lib/utils/crypto/password/hash";
 

@@ -1,6 +1,6 @@
-import controllerErrors from "../../../lib/enums/error/controller";
-import modelErrors from "../../../lib/enums/error/model";
-import inputValidationErrors from "../../../lib/enums/error/util/input-validation";
+import controllerErrors from "../../../lib/errors/controller";
+import modelErrors from "../../../lib/errors/model";
+import inputValidationErrors from "../../../lib/errors/util/input-validation";
 import responseEnums from "../../../lib/enums/response/response";
 import errorResponse from "../../../lib/utils/response/errorResponse";
 

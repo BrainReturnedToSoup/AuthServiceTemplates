@@ -6,6 +6,7 @@ const config = {
   user: "postgres",
   host: "localhost",
   database: "nodejs_auth_service",
+  password: "password",
   port: 5432,
   max: 100,
 };

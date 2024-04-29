@@ -7,7 +7,7 @@ const dataManagementApis = {
     let connection, result, error;
 
     try {
-      await pool.connect();
+      connection = await pool.connect();
       result = await connection.oneOrNone(queryString, paramArr);
     } catch (err) {
       error = err;
@@ -26,7 +26,7 @@ const dataManagementApis = {
     let connection, error;
 
     try {
-      await pool.connect();
+      connection = await pool.connect();
       await connection.query(queryString, paramArr);
     } catch (err) {
       error = err;

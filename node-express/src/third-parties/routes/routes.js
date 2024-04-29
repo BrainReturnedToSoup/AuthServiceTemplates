@@ -16,7 +16,7 @@ router.post("/", initialize);
  *
  *
  * Returns:
- * - 'thirdpartyID' property with a generated UUID value in the response body.
+ * - 'id' property with a generated UUID value representing the third party id in the response body.
  */
 
 router.post("/authenticate", authenticate);

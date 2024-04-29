@@ -1,4 +1,3 @@
-import "dotenv";
 import "../data-management/postgres-pool"; //init the DB pool as soon as possible
 
 import express from "express";

@@ -1,6 +1,5 @@
 import errorHandler from "./errorHandler";
 import models from "../../models/authenticate";
-
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
 import validateThirdPartyID from "../../../lib/utils/input-validators/thirdPartyID";
@@ -10,7 +9,6 @@ import encryptThirdPartyID from "../../../lib/utils/crypto/web-token/encrypt/thi
 import webToken from "../../../lib/utils/web-token/webToken";
 import idGenerator from "../../../lib/utils/id-generator/idGenerator";
 import comparePasswordsUtil from "../../../lib/utils/crypto/password/compare";
-
 import errors from "../../../lib/errors/controller";
 import errorEnums from "../../../lib/enums/error/controller";
 const { DoesNotMatchError } = errors;

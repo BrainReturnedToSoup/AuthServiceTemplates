@@ -1,6 +1,5 @@
-import controllerErrors from "../../../lib/errors/controller";
 import modelErrors from "../../../lib/errors/model";
-import inputValidationErrors from "../../../lib/enums/error/util/input-validation";
+import inputValidationErrors from "../../../lib/errors/util/input-validation";
 import responseEnums from "../../../lib/enums/response/response";
 import errorResponse from "../../../lib/utils/response/errorResponse";
 
@@ -14,7 +13,7 @@ export default function errorHandler(req, res, error) {
       handle.databaseError(res, error);
       break;
 
-    case error instanceof controllerErrors.ExistingRecordError:
+    case error instanceof modelErrors.ExistingRecordError:
       handle.existingRecordError(res, error);
       break;
 

@@ -3,8 +3,6 @@ import models from "../../models/initialize";
 import validateThirdPartyName from "../../../lib/utils/input-validators/thirdPartyName";
 import validateThirdPartyURI from "../../../lib/utils/input-validators/thirdPartyURI";
 import idGenerator from "../../../lib/utils/id-generator/idGenerator";
-import errors from "../../../lib/errors/controller";
-const { ExistingRecordError } = errors;
 
 /*  validates the supplied third-party name and URI
  *  from the body.
@@ -27,9 +25,7 @@ function validateInput(req) {
 async function checkExistingThirdParty(req) {
   const { name } = req.body;
 
-  const existingThirdParty = await models.checkExistingRecord(name);
-
-  if (existingThirdParty) throw new ExistingRecordError();
+  await models.retrieveRecord(name);
 }
 
 /*  takes the third-party name and URI from the body to create a new third-party record in the 'third-party' table

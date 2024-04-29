@@ -5,12 +5,4 @@ class DoesNotMatchError extends Error {
   }
 }
 
-class ExistingRecordError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = this.constructor.name;
-  }
-}
-
-
-export default { DoesNotMatchError, ExistingRecordError };
+export default { DoesNotMatchError };
