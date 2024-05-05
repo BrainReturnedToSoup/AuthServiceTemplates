@@ -58,7 +58,7 @@ async function createUser(req) {
  *  res.body.userID = user ID generated
  */
 function respond(req, res) {
-  res.status(201).json({ userID: req.userID });
+  res.status(201).json({ id: req.userID });
 }
 
 export default async function initialize(req, res) {

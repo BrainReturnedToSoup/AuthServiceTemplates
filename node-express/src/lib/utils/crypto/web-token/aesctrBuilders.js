@@ -21,7 +21,7 @@ function encryptBuilder(keyHex) {
 
       const cipher = createCipheriv("aes-256-ctr", keyBuffer, ivBuffer);
 
-      let encrypted = cipher.update(string, "utf-8", "hex");
+      let encrypted = cipher.update(string, "utf8", "hex");
       encrypted += cipher.final("hex");
 
       return encrypted + ":" + ivHex;
@@ -41,8 +41,8 @@ function decryptBuilder(keyHex) {
 
       const decipher = createDecipheriv("aes-256-ctr", keyBuffer, ivBuffer);
 
-      let decrypted = decipher.update(cipherText, "hex", "utf-8");
-      decrypted += decipher.final("utf-8");
+      let decrypted = decipher.update(cipherText, "hex", "utf8");
+      decrypted += decipher.final("utf8");
 
       return decrypted;
     } catch (error) {

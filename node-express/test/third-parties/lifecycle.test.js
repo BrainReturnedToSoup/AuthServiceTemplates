@@ -73,7 +73,7 @@ describe("Creation of a generic third-party origin: POST /third-parties", () => 
 
     await supertest(testServer)
       .delete(`/third-parties/${res.body.id}`)
-      .expect(204);
+      .expect(204); //cleanup
   });
 });
 
@@ -134,31 +134,68 @@ describe("Authenticating a third-party origin: /third-parties/authenticate", () 
     const emailUsername = "validEmailUsername",
       password = "Password123!";
 
-    await supertest(testServer)
+    const userRes = await supertest(testServer)
       .post("/users")
       .send({ emailUsername, password })
       .expect(201);
 
-    const res = await supertest(testServer)
+    const thirdPartyRes = await supertest(testServer)
       .post("/third-parties")
       .send({ name: "validName", uri: "https://example.com/test" })
       .expect(201);
 
     await supertest(testServer)
       .post("/third-parties/authenticate")
-      .send({ emailUsername, password, thirdPartyID: res.body.id })
+      .send({ emailUsername, password, thirdPartyID: thirdPartyRes.body.id })
       .expect(201);
 
     await supertest(testServer)
-      .delete(`/third-parties/${res.body.id}`)
-      .expect(204);
+      .delete(`/third-parties/${thirdPartyRes.body.id}`)
+      .expect(204); //cleanup
 
-    await supertest(testServer).
+    await supertest(testServer).delete(`/users/${userRes.body.id}`).expect(204); //cleanup
   });
 });
 
 //verify
-describe("Verifying a third-party origin: POST /third-parties/verify", () => {});
+describe("Verifying a third-party origin: POST /third-parties/verify", () => {
+  test("valid token", async () => {
+    const emailUsername = "validEmailUsername",
+      password = "Password123!";
+
+    const createUserRes = await supertest(testServer)
+      .post("/users")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    const createThirdPartyRes = await supertest(testServer)
+      .post("/third-parties")
+      .send({ name: "validName", uri: "https://example.com/test" })
+      .expect(201);
+
+    const authenticateRes = await supertest(testServer)
+      .post("/third-parties/authenticate")
+      .send({
+        emailUsername,
+        password,
+        thirdPartyID: createThirdPartyRes.body.id,
+      })
+      .expect(201);
+
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({ token: authenticateRes.body.token })
+      .expect(204);
+
+    await supertest(testServer)
+      .delete(`/third-parties/${createThirdPartyRes.body.id}`)
+      .expect(204); //cleanup
+
+    await supertest(testServer)
+      .delete(`/users/${createUserRes.body.id}`)
+      .expect(204); //cleanup
+  });
+});
 
 //delete
 describe("Deleting a third-party origin: DELETE /third-parties:id", () => {});

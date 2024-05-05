@@ -32,8 +32,10 @@ function validateInput(req) {
 async function decryptTokenPayload(req) {
   const { grantID, thirdPartyID } = req.decodedToken;
 
-  req.tokenData.thirdPartyID = decryptThirdPartyID(thirdPartyID);
-  req.tokenData.grantID = decryptGrantID(grantID);
+  req.tokenData = {
+    thirdPartyID: await decryptThirdPartyID(thirdPartyID),
+    grantID: await decryptGrantID(grantID),
+  };
 }
 
 /*  The third-party session record associated with the token is fetched using the grant ID with a custom model abstraction.
