@@ -49,7 +49,7 @@ const handle = {
   },
 
   serverError: function (res, error) {
-    //any unfoerseen internal server error
+    //any unforeseen internal server error
     errorResponse(res, 500, responseEnums.serverError, error.message);
   },
 };

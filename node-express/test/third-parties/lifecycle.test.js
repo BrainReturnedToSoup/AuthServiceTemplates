@@ -1,12 +1,56 @@
 import { config } from "dotenv";
 config();
 
-import createServer from "../../root/createServer";
 import supertest from "supertest";
 
-const testServer = createServer();
+import testServer from "../testServer";
+import webToken from "../../src/lib/utils/web-token/webToken";
+import dataManagementApis from "../../src/lib/utils/data-management/dataManagementApis";
 
-import generateExpiredToken from "./expiredTokenMock";
+//delete
+describe("Deleting a third-party origin: DELETE /third-parties:id", () => {
+  test("invalid id: null", async () => {
+    const id = null;
+
+    await supertest(testServer).delete(`/third-parties/${id}`).expect(400);
+  });
+
+  test("invalid id: random string", async () => {
+    const id = "al9Sk@#iLwPQ"; //not a uuid
+
+    await supertest(testServer).delete(`/third-parties/${id}`).expect(400);
+  });
+
+  test("invalid id: uuid with a pre space", async () => {
+    const id = " 4bc575b7-93ba-41bf-b08d-4fddb355afb4";
+
+    await supertest(testServer).delete(`/third-parties/${id}`).expect(400);
+  });
+
+  test("valid id", async () => {
+    const id = "4bc575b7-93ba-41bf-b08d-4fddb355afb4",
+      name = "validName",
+      uri = "https://example.com/test";
+
+    await dataManagementApis.queryNoReturn(
+      `        
+      INSERT INTO third_parties
+    (
+      third_party_id,
+      third_party_name,
+      third_party_uri
+    )
+    VALUES ($1, $2, $3)
+    `,
+      [id, name, uri]
+    );
+    //creates a third party instance, which this is done manually
+    //to decouple from the model implementation, and to only worry about
+    //the data within the DB.
+
+    await supertest(testServer).delete(`/third-parties/${id}`).expect(204);
+  });
+});
 
 //initialize
 describe("Creation of a generic third-party origin: POST /third-parties", () => {
@@ -199,23 +243,17 @@ describe("Verifying a third-party origin: POST /third-parties/verify", () => {
   });
 
   test("invalid token: expired", async () => {
-    const emailUsername = "validEmailUsername",
-      password = "Password123!";
-
-    const thirdPartyName = "validName",
-      thirdPartyURI = "https://example.com/test";
-
-    const expiredToken = generateExpiredToken(
-      emailUsername,
-      password,
-      thirdPartyName,
-      thirdPartyURI
-    );
+    //essentially an empty token that only contains the exp property set to an expired time
+    const expiredToken = webToken.sign({
+      exp: Math.floor(Date.now() / 1000) - 10, //exp set to 10 minutes prior to the time of code execution
+    });
 
     await supertest(testServer)
       .post("/third-parties/verify")
       .send({ token: expiredToken })
       .expect(406);
+    //should return a token error, since jsonwebtoken
+    //automatically throws if the token is expired
   });
 
   test("invalid token: user does not exist", async () => {
@@ -300,6 +338,3 @@ describe("Verifying a third-party origin: POST /third-parties/verify", () => {
       .expect(204); //cleanup
   });
 });
-
-//delete
-describe("Deleting a third-party origin: DELETE /third-parties:id", () => {});
