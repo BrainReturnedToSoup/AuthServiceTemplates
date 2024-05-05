@@ -4,8 +4,15 @@ export default {
   deleteRecord: async function (thirdPartyID) {
     await dataManagementApis.queryNoReturn(
       `
-    DELETE FROM third_parties
-    WHERE third_party_id = $1
+      BEGIN;
+
+      DELETE FROM third_party_sessions
+      WHERE third_party_id = $1;
+
+      DELETE FROM third_parties
+      WHERE third_party_id = $1;
+
+      COMMIT;
     `,
       [thirdPartyID]
     );
