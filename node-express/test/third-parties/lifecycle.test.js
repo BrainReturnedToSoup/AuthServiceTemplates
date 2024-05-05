@@ -6,6 +6,8 @@ import supertest from "supertest";
 
 const testServer = createServer();
 
+import generateExpiredToken from "./expiredTokenMock";
+
 //initialize
 describe("Creation of a generic third-party origin: POST /third-parties", () => {
   test("not supplying a body", async () => {
@@ -134,6 +136,9 @@ describe("Authenticating a third-party origin: /third-parties/authenticate", () 
     const emailUsername = "validEmailUsername",
       password = "Password123!";
 
+    const thirdPartyName = "validName",
+      thirdPartyURI = "https://example.com/test";
+
     const userRes = await supertest(testServer)
       .post("/users")
       .send({ emailUsername, password })
@@ -141,7 +146,7 @@ describe("Authenticating a third-party origin: /third-parties/authenticate", () 
 
     const thirdPartyRes = await supertest(testServer)
       .post("/third-parties")
-      .send({ name: "validName", uri: "https://example.com/test" })
+      .send({ name: thirdPartyName, uri: thirdPartyURI })
       .expect(201);
 
     await supertest(testServer)
@@ -159,9 +164,66 @@ describe("Authenticating a third-party origin: /third-parties/authenticate", () 
 
 //verify
 describe("Verifying a third-party origin: POST /third-parties/verify", () => {
-  test("valid token", async () => {
+  test("invalid inputs", async () => {
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({ token: null })
+      .expect(406);
+
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({ token: "" })
+      .expect(406);
+
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({ token: " " })
+      .expect(406);
+
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({})
+      .expect(406);
+
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({ invalidProperty: null })
+      .expect(406);
+
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({ token: 123 })
+      .expect(406);
+
+    await supertest(testServer).post("/third-parties/verify").expect(406);
+  });
+
+  test("invalid token: expired", async () => {
     const emailUsername = "validEmailUsername",
       password = "Password123!";
+
+    const thirdPartyName = "validName",
+      thirdPartyURI = "https://example.com/test";
+
+    const expiredToken = generateExpiredToken(
+      emailUsername,
+      password,
+      thirdPartyName,
+      thirdPartyURI
+    );
+
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({ token: expiredToken })
+      .expect(406);
+  });
+
+  test("invalid token: user does not exist", async () => {
+    const emailUsername = "validEmailUsername",
+      password = "Password123!";
+
+    const thirdPartyName = "validName",
+      thirdPartyURI = "https://example.com/test";
 
     const createUserRes = await supertest(testServer)
       .post("/users")
@@ -170,7 +232,49 @@ describe("Verifying a third-party origin: POST /third-parties/verify", () => {
 
     const createThirdPartyRes = await supertest(testServer)
       .post("/third-parties")
-      .send({ name: "validName", uri: "https://example.com/test" })
+      .send({ name: thirdPartyName, uri: thirdPartyURI })
+      .expect(201);
+
+    const authenticateRes = await supertest(testServer)
+      .post("/third-parties/authenticate")
+      .send({
+        emailUsername,
+        password,
+        thirdPartyID: createThirdPartyRes.body.id,
+      })
+      .expect(201);
+
+    await supertest(testServer)
+      .delete(`/third-parties/${createThirdPartyRes.body.id}`)
+      .expect(204); //cleanup
+
+    await supertest(testServer)
+      .delete(`/users/${createUserRes.body.id}`)
+      .expect(204); //cleanup
+
+    //executes after the db has been wiped, hence the token is invalid
+    //since the user is not found
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({ token: authenticateRes.body.token })
+      .expect(404);
+  });
+
+  test("valid token", async () => {
+    const emailUsername = "validEmailUsername",
+      password = "Password123!";
+
+    const thirdPartyName = "validName",
+      thirdPartyURI = "https://example.com/test";
+
+    const createUserRes = await supertest(testServer)
+      .post("/users")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    const createThirdPartyRes = await supertest(testServer)
+      .post("/third-parties")
+      .send({ name: thirdPartyName, uri: thirdPartyURI })
       .expect(201);
 
     const authenticateRes = await supertest(testServer)
