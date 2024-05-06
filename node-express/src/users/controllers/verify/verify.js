@@ -32,7 +32,7 @@ function validateInput(req) {
 async function decryptTokenPayload(req) {
   const { grantID } = req.decodedToken;
 
-  req.decrypted = decryptGrantID(grantID);
+  req.tokenData = { grantID: await decryptGrantID(grantID) };
 }
 
 /*  The JTI associated with the record containing the in-app session is retrieved
@@ -42,10 +42,10 @@ async function decryptTokenPayload(req) {
  *
  *  req.storedJti = retrieved JTI.
  */
-async function getStoredJti(req) {
-  const { decrypted } = req;
+async function getSessionData(req) {
+  const { grantID } = req.tokenData;
 
-  req.storedJti = await models.getJti(decrypted);
+  req.sessionData = await models.getSessionData(grantID);
 }
 
 /*  The JTI saved in req.storedJti is compared with the JTI saved in the decoded token
@@ -56,7 +56,7 @@ async function getStoredJti(req) {
  */
 function compareJti(req) {
   const { jti } = req.decodedToken,
-    { storedJti } = req;
+    { storedJti } = req.sessionData;
 
   if (jti !== storedJti)
     throw new DoesNotMatchError(errorEnums.DoesNotMatchError.JTI);
@@ -74,16 +74,17 @@ function compareJti(req) {
  *
  *  req.newToken = new token created.
  */
+
 async function generateNewToken(req) {
-  const { grantID } = req.decodedToken;
+  const { grantID } = req.tokenData;
 
   const newJti = idGenerator();
 
   await models.updateJti(grantID, newJti);
 
-  req.tokenData.jti = newJti;
+  const newPayload = { ...req.decodedToken, jti: newJti };
 
-  req.newToken = webToken.sign(req.tokenData);
+  req.newToken = webToken.sign(newPayload);
 }
 
 /*  Finally, the new token created can now be sent back to the user using the res body
@@ -93,14 +94,17 @@ async function generateNewToken(req) {
  * res.body.newToken = new token created.
  */
 function respond(req, res) {
-  res.status(201).json({ newToken: req.newToken });
+  const { newToken } = req,
+    { userID } = req.sessionData;
+
+  res.status(201).json({ userID, newToken });
 }
 
 export default async function verify(req, res) {
   try {
     validateInput(req, res);
     await decryptTokenPayload(req, res);
-    await getStoredJti(req, res);
+    await getSessionData(req, res);
     compareJti(req, res);
     await generateNewToken(req, res);
     respond(req, res);

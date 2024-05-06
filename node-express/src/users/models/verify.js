@@ -4,25 +4,25 @@ import errorEnums from "../../lib/enums/error/model";
 const { DataNotFoundError } = errors;
 
 export default {
-  getJti: async function (grantID) {
+  getSessionData: async function (grantID) {
     const result = await dataManagementApis.oneOrNone(
       `
-        SELECT jti
-        FROM User_Sessions
+        SELECT user_id, jti
+        FROM user_sessions
         WHERE grant_id = $1
         `,
       [grantID]
     );
 
-    if (!result) throw new DataNotFoundError(errorEnums.DataNotFoundError.JTI);
+    if (!result) throw new DataNotFoundError(errorEnums.DataNotFoundError.SESSION);
 
-    return result.jti;
+    return { userID: result.user_id, storedJti: result.jti };
   },
 
   updateJti: async function (grantID, jti) {
     await dataManagementApis.queryNoReturn(
       `
-      UPDATE User_Sessions
+      UPDATE user_sessions
       SET jti = $1
       WHERE grant_id = $2
     `,

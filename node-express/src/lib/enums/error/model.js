@@ -4,7 +4,7 @@ const enums = Object.freeze({
     HASHED_PW: "HASHED-PW",
     EMAIL_USERNAME: "EMAIL-USERNAME",
     USER_ID: "USER-ID",
-    JTI: "JTI",
+    SESSION: "SESSION",
     URI: "URI",
     USER_ID_THIRD_PARTY_ID: "USER_ID_THIRD_PARTY_ID",
   }),

@@ -35,7 +35,7 @@ const handle = {
 
   tokenError: function (res, error) {
     //some type of internal server error related to token APIs
-    errorResponse(res, 500, responseEnums.tokenError, error.message);
+    errorResponse(res, 406, responseEnums.tokenError, error.message);
   },
 
   databaseError: function (res, error) {
