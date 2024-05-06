@@ -124,7 +124,7 @@ describe("Creation of a generic third-party origin: POST /third-parties", () => 
 });
 
 //authenticate
-describe("Authenticating a third-party origin: /third-parties/authenticate", () => {
+describe("Authenticating a third-party origin: POST /third-parties/authenticate", () => {
   test("not supplying a body", async () => {
     await supertest(testServer).post("/third-parties/authenticate").expect(400);
   });
