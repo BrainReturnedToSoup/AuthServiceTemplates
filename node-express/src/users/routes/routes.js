@@ -25,7 +25,7 @@ router.post("/authenticate", authenticate);
  * Authenticate a user.
  *
  * Expects:
- * - 'email-username' property and value in the request body.
+ * - 'emailUsername' property and value in the request body.
  * - 'password' property and value in the request body.
  *
  * Returns:

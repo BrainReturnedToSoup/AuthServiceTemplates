@@ -25,10 +25,10 @@ export default {
   createSessionRecord: async function (userID, grantID, jti, exp) {
     await dataManagementApis.queryNoReturn(
       `
-    INSERT INTO User_Sessions (grant_id, user_id, jti, expiration)
+    INSERT INTO user_sessions (grant_id, user_id, jti, expiration)
     VALUES ($1, $2, $3, $4)
   `,
-      [userID, grantID, jti, exp]
+      [grantID, userID, jti, exp]
     );
   },
 };

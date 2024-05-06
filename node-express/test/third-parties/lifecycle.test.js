@@ -32,6 +32,9 @@ describe("Deleting a third-party origin: DELETE /third-parties:id", () => {
       name = "validName",
       uri = "https://example.com/test";
 
+    //creates a third party instance which this is done manually
+    //to decouple from the model implementation, and to only worry about
+    //the data within the DB.
     await dataManagementApis.queryNoReturn(
       `        
       INSERT INTO third_parties
@@ -44,11 +47,29 @@ describe("Deleting a third-party origin: DELETE /third-parties:id", () => {
     `,
       [id, name, uri]
     );
-    //creates a third party instance, which this is done manually
-    //to decouple from the model implementation, and to only worry about
-    //the data within the DB.
 
     await supertest(testServer).delete(`/third-parties/${id}`).expect(204);
+
+    const thirdPartyResult = await dataManagementApis.oneOrNone(
+      `
+      SELECT third_party_id
+      FROM third_parties
+      WHERE third_party_id = $1
+      `,
+      [id]
+    );
+
+    const sessionResult =
+      (await dataManagementApis.query(
+        `
+      SELECT third_party_id
+      FROM third_parties
+      WHERE third_party_id = $1
+      `,
+        [id]
+      ).length) === 0; //needs to return an array that is completely empt
+
+    expect(thirdPartyResult || sessionResult).toBeFalsy(); // both have to be falsy, meaning all related records are deleted
   });
 });
 
@@ -203,6 +224,11 @@ describe("Authenticating a third-party origin: POST /third-parties/authenticate"
       .expect(204); //cleanup
 
     await supertest(testServer).delete(`/users/${userRes.body.id}`).expect(204); //cleanup
+
+    await supertest(testServer)
+      .post("/third-parties/authenticate")
+      .send({ emailUsername, password, thirdPartyID: thirdPartyRes.body.id })
+      .expect(404);
   });
 });
 
@@ -336,5 +362,12 @@ describe("Verifying a third-party origin: POST /third-parties/verify", () => {
     await supertest(testServer)
       .delete(`/users/${createUserRes.body.id}`)
       .expect(204); //cleanup
+
+    await supertest(testServer)
+      .post("/third-parties/verify")
+      .send({ token: authenticateRes.body.token })
+      .expect(404);
+    //making sure the original token is not valid
+    //because the third party does not exist
   });
 });

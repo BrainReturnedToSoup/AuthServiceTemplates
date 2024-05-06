@@ -74,7 +74,9 @@ async function createUserSession(req) {
     jti = idGenerator(),
     exp = expGenerator();
 
-  req.sessionData = await models.createSessionRecord(userID, grantID, jti, exp);
+  await models.createSessionRecord(userID, grantID, jti, new Date(exp * 1000));
+
+  req.sessionData = { grantID, jti, exp };
 }
 
 /*  takes the grant ID, JTI, and expiry value saved under req.sessionData and puts
@@ -85,10 +87,10 @@ async function createUserSession(req) {
  *
  *  req.token = token just created
  */
-function createToken(req) {
+async function createToken(req) {
   const payload = {
     ...req.sessionData,
-    grantID: encryptGrantID(req.sessionData.grantID),
+    grantID: await encryptGrantID(req.sessionData.grantID),
   };
 
   req.token = webToken.sign(payload);
@@ -109,7 +111,7 @@ export default async function authenticate(req, res) {
     await getUserIDandHashedPw(req);
     await comparePasswords(req);
     await createUserSession(req);
-    createToken(req);
+    await createToken(req);
     respond(req, res);
   } catch (error) {
     errorHandler(req, res, error);

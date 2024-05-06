@@ -38,6 +38,25 @@ const dataManagementApis = {
 
     if (error) throw new DatabaseError(error.message);
   },
+
+  query: async function (queryString, paramArr) {
+    let connection, error, result;
+
+    try {
+      connection = await pool.connect();
+      result = await connection.query(queryString, paramArr);
+    } catch (err) {
+      error = err;
+    } finally {
+      if (connection) {
+        await connection.done();
+      }
+    }
+
+    if (error) throw new DatabaseError(error.message);
+
+    return result;
+  },
 };
 
 export default dataManagementApis;

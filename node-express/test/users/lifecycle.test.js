@@ -34,13 +34,34 @@ describe("Deleting a user: DELETE /users/:id", () => {
 
     await dataManagementApis.queryNoReturn(
       `
-        INSERT INTO Users (user_id, email_username, pw)
+        INSERT INTO users (user_id, email_username, pw)
         VALUES ($1, $2, $3)
         `,
       [id, username, password]
     );
 
     await supertest(testServer).delete(`/users/${id}`).expect(204);
+
+    const userResult = await dataManagementApis.oneOrNone(
+      `
+        SELECT user_id
+        FROM users
+        WHERE user_id = $1
+        `,
+      [id]
+    );
+
+    const sessionResult =
+      (await dataManagementApis.query(
+        `
+        SELECT user_id
+        FROM user_sessions
+        WHERE user_id = $1
+        `,
+        [id]
+      ).length) === 0; //needs to return an array that is completely empty
+
+    expect(userResult || sessionResult).toBeFalsy(); // both have to be falsy, meaning all related records are deleted
   });
 });
 
@@ -159,7 +180,63 @@ describe("Initializing a user: POST /users", () => {
 });
 
 //authenticate
-describe("Authenticating a user: POST /users/authenticate", () => {});
+describe("Authenticating a user: POST /users/authenticate", () => {
+  test("invalid input: email", async () => {
+    const emailUsername = "validUsername",
+      password = "Password123!";
+
+    const res = await supertest(testServer)
+      .post("/users")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    await supertest(testServer)
+      .post("/users/authenticate")
+      .send({ emailUsername: "invalid email", password })
+      .expect(400);
+
+    await supertest(testServer).delete(`/users/${res.body.id}`).expect(204);
+  });
+
+  test("invalid input: password", async () => {
+    const emailUsername = "validUsername",
+      password = "Password123!";
+
+    const res = await supertest(testServer)
+      .post("/users")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    await supertest(testServer)
+      .post("/users/authenticate")
+      .send({ emailUsername, password: "invalid" })
+      .expect(400);
+
+    await supertest(testServer).delete(`/users/${res.body.id}`).expect(204);
+  });
+
+  test("valid input", async () => {
+    const emailUsername = "validUsername",
+      password = "Password123!";
+
+    const res = await supertest(testServer)
+      .post("/users")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    await supertest(testServer)
+      .post("/users/authenticate")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    await supertest(testServer).delete(`/users/${res.body.id}`).expect(204);
+
+    await supertest(testServer)
+      .post("/users/authenticate")
+      .send({ emailUsername, password })
+      .expect(404); //ensures the user is deleted, which should return a 'not found' code
+  });
+});
 
 //verify
 describe("Verifying a user: POST /users/verify", () => {});
