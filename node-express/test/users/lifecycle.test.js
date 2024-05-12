@@ -510,12 +510,67 @@ emailUsername stored corres to the user: PUT /users/email-username`, () => {
   test("invalid input: id", async () => {
     //unit test for input validation will handle the edge cases,
     //just need to check error code propagation
+
+    const id = "invalid id",
+      emailUsername = "NewEmailUsername";
+
+    await supertest(testServer)
+      .put("/users/email-username")
+      .send({ userID: id, emailUsername })
+      .expect(400);
   });
 
   test("invalid input: emailUsername", async () => {
     //unit test for input validation will handle the edge cases,
     //just need to check error code propagation
+
+    const id = "4bc575b7-93ba-41bf-b08d-4fddb355afb4",
+      emailUsername = "invalid username";
+
+    await supertest(testServer)
+      .put("/users/email-username")
+      .send({ userID: id, emailUsername })
+      .expect(400);
   });
 
-  test("valid inputs", async () => {});
+  test("valid inputs", async () => {
+    const emailUsername = "validEmailUsername",
+      password = "Password123!";
+
+    const createUserRes = await supertest(testServer)
+      .post("/users")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    await supertest(testServer)
+      .post("/users/email-username")
+      .send({ userID: createUserRes.body.id, emailUsername })
+      .expect(200)
+      .then((firstRes) => {
+        const { matches } = firstRes.body;
+
+        expect(matches).toBeTruthy();
+      });
+
+    const newEmailUsername = "NewEmailUsername";
+
+    await supertest(testServer)
+      .put("/users/email-username")
+      .send({ userID: createUserRes.body.id, emailUsername: newEmailUsername })
+      .expect(204);
+
+    await supertest(testServer)
+      .post("/users/email-username")
+      .send({ userID: createUserRes.body.id, emailUsername: newEmailUsername })
+      .expect(200)
+      .then((secondRes) => {
+        const { matches } = secondRes.body;
+
+        expect(matches).toBeTruthy();
+      });
+
+    await supertest(testServer)
+      .delete(`/users/${createUserRes.body.id}`)
+      .expect(204);
+  });
 });
