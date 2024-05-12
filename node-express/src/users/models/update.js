@@ -4,7 +4,7 @@ export default {
   updatePassword: async function (userID, newPassword) {
     await dataManagementApis.queryNoReturn(
       `
-        UPDATE Users
+        UPDATE users
         SET pw = $1
         WHERE user_id = $2
         `,
@@ -15,7 +15,7 @@ export default {
   updateEmailUsername: async function (userID, newEmailUsername) {
     await dataManagementApis.queryNoReturn(
       `
-        UPDATE Users
+        UPDATE users
         SET email_username = $1
         WHERE user_id = $2
         `,

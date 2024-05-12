@@ -3,6 +3,7 @@ import models from "../../models/update";
 import validateEmailUsername from "../../../lib/utils/input-validators/emailUsername";
 import validatePassword from "../../../lib/utils/input-validators/password";
 import validateUserID from "../../../lib/utils/input-validators/userID";
+import hashPassword from "../../../lib/utils/crypto/password/hash";
 
 const password = {
   /*  validates the supplied user ID and new password
@@ -18,6 +19,12 @@ const password = {
     validatePassword(password);
   },
 
+  hashNewPassword: async function (req) {
+    const { password } = req.body;
+
+    req.hashedPassword = await hashPassword(password);
+  },
+
   /*  Takes the user ID and new password from the req body and
    *  uses such in the overwrite of the password linked to the user ID using a custom
    *  model abstraction.
@@ -25,9 +32,10 @@ const password = {
    *  This is achieved via a custom model abstraction for applying the update.
    */
   update: async function (req) {
-    const { userID, password } = req.body;
+    const { userID } = req.body,
+      { hashedPassword } = req;
 
-    await models.updatePassword(userID, password);
+    await models.updatePassword(userID, hashedPassword);
   },
 };
 
@@ -69,6 +77,7 @@ export default {
   password: async function (req, res) {
     try {
       password.validateInput(req);
+      await password.hashNewPassword(req);
       await password.update(req);
       respond(res);
     } catch (error) {

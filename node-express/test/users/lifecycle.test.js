@@ -399,14 +399,14 @@ describe("Compare a supplied emailUsername to a stored emailUsername: POST /user
     const emailUsername = "validEmailUsername",
       password = "Password123!";
 
-    const initRes = await supertest(testServer)
+    const createUserRes = await supertest(testServer)
       .post("/users")
       .send({ emailUsername, password })
       .expect(201);
 
     await supertest(testServer)
       .post("/users/email-username")
-      .send({ userID: initRes.body.id, emailUsername })
+      .send({ userID: createUserRes.body.id, emailUsername })
       .expect(200)
       .then((res) => {
         const { matches } = res.body;
@@ -416,7 +416,10 @@ describe("Compare a supplied emailUsername to a stored emailUsername: POST /user
 
     await supertest(testServer)
       .post("/users/email-username")
-      .send({ userID: initRes.body.id, emailUsername: "DiffEmailUsername" })
+      .send({
+        userID: createUserRes.body.id,
+        emailUsername: "DiffEmailUsername",
+      })
       .expect(200)
       .then((res) => {
         const { matches } = res.body;
@@ -424,14 +427,95 @@ describe("Compare a supplied emailUsername to a stored emailUsername: POST /user
         expect(matches).toBeFalsy();
       });
 
-    await supertest(testServer).delete(`/users/${initRes.body.id}`).expect(204);
+    await supertest(testServer)
+      .delete(`/users/${createUserRes.body.id}`)
+      .expect(204);
   });
 });
 
 //update password
 describe(`Take a supplied password and overwrite the 
-password stored corres to the user: PUT /users/password`, () => {});
+password stored corres to the user: PUT /users/password`, () => {
+  test("invalid input: id", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
+    const id = "invalid id",
+      password = "NewPassword123!";
+
+    supertest(testServer)
+      .put("/users/password")
+      .send({ userID: id, password })
+      .expect(400);
+  });
+
+  test("invalid input: password", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
+    const id = "4bc575b7-93ba-41bf-b08d-4fddb355afb4",
+      password = "invalid password";
+
+    supertest(testServer)
+      .put("/users/password")
+      .send({ userID: id, password })
+      .expect(400);
+  });
+
+  test("valid inputs", async () => {
+    const emailUsername = "validEmailUsername",
+      password = "Password123!";
+
+    const createUserRes = await supertest(testServer)
+      .post("/users")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    await supertest(testServer)
+      .post("/users/password")
+      .send({ userID: createUserRes.body.id, password })
+      .expect(200)
+      .then((firstRes) => {
+        const { matches } = firstRes.body;
+
+        expect(matches).toBeTruthy();
+      });
+
+    const newPassword = "SPECNewPassword123!";
+
+    await supertest(testServer)
+      .put("/users/password")
+      .send({ userID: createUserRes.body.id, password: newPassword })
+      .expect(204);
+
+    await supertest(testServer)
+      .post("/users/password")
+      .send({ userID: createUserRes.body.id, password: newPassword })
+      .expect(200)
+      .then((secondRes) => {
+        const { matches } = secondRes.body;
+
+        expect(matches).toBeTruthy();
+      });
+
+    await supertest(testServer)
+      .delete(`/users/${createUserRes.body.id}`)
+      .expect(204);
+  });
+});
 
 //update emailUsername
 describe(`Take a supplied emailUsername and overwrite the
-emailUsername stored corres to the user: PUT /users/email-username`, () => {});
+emailUsername stored corres to the user: PUT /users/email-username`, () => {
+  test("invalid input: id", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+  });
+
+  test("invalid input: emailUsername", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+  });
+
+  test("valid inputs", async () => {});
+});
