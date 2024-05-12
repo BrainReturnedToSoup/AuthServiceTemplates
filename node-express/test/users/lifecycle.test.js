@@ -358,7 +358,75 @@ describe("Compare a supplied password to a stored password: POST /users/password
 });
 
 //compare emailUsernames
-describe("Compare a supplied emailUsername to a stored emailUsername: POST /users/email-username", () => {});
+describe("Compare a supplied emailUsername to a stored emailUsername: POST /users/email-username", () => {
+  test("invalid input: id", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
+    const id = "invalid id",
+      emailUsername = "validEmailUsername";
+
+    await supertest(testServer)
+      .post("/users/email-username")
+      .send({ userID: id, emailUsername })
+      .expect(400);
+  });
+
+  test("invalid input: emailUsername", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
+    const id = "4bc575b7-93ba-41bf-b08d-4fddb355afb4",
+      emailUsername = "invalid emailUsername";
+
+    await supertest(testServer)
+      .post("/users/email-username")
+      .send({ userID: id, emailUsername })
+      .expect(400);
+  });
+
+  test("user does not exist", async () => {
+    const id = "4bc575b7-93ba-41bf-b08d-4fddb355afb4",
+      emailUsername = "validEmailUsername";
+
+    await supertest(testServer)
+      .post("/users/email-username")
+      .send({ userID: id, emailUsername })
+      .expect(404);
+  });
+
+  test("valid inputs", async () => {
+    const emailUsername = "validEmailUsername",
+      password = "Password123!";
+
+    const initRes = await supertest(testServer)
+      .post("/users")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    await supertest(testServer)
+      .post("/users/email-username")
+      .send({ userID: initRes.body.id, emailUsername })
+      .expect(200)
+      .then((res) => {
+        const { matches } = res.body;
+
+        expect(matches).toBeTruthy();
+      });
+
+    await supertest(testServer)
+      .post("/users/email-username")
+      .send({ userID: initRes.body.id, emailUsername: "DiffEmailUsername" })
+      .expect(200)
+      .then((res) => {
+        const { matches } = res.body;
+
+        expect(matches).toBeFalsy();
+      });
+
+    await supertest(testServer).delete(`/users/${initRes.body.id}`).expect(204);
+  });
+});
 
 //update password
 describe(`Take a supplied password and overwrite the 

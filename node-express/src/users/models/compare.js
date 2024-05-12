@@ -33,6 +33,6 @@ export default {
     if (!result)
       throw new DataNotFoundError(errorEnums.DataNotFoundError.EMAIL_USERNAME);
 
-    return result.emailUsername;
+    return result.email_username;
   },
 };
