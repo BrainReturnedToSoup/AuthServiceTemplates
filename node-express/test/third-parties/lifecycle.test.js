@@ -10,19 +10,9 @@ import dataManagementApis from "../../src/lib/utils/data-management/dataManageme
 //delete
 describe("Deleting a third-party origin: DELETE /third-parties:id", () => {
   test("invalid id: null", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
     const id = null;
-
-    await supertest(testServer).delete(`/third-parties/${id}`).expect(400);
-  });
-
-  test("invalid id: random string", async () => {
-    const id = "al9Sk@#iLwPQ"; //not a uuid
-
-    await supertest(testServer).delete(`/third-parties/${id}`).expect(400);
-  });
-
-  test("invalid id: uuid with a pre space", async () => {
-    const id = " 4bc575b7-93ba-41bf-b08d-4fddb355afb4";
 
     await supertest(testServer).delete(`/third-parties/${id}`).expect(400);
   });
@@ -75,59 +65,29 @@ describe("Deleting a third-party origin: DELETE /third-parties:id", () => {
 
 //initialize
 describe("Creation of a generic third-party origin: POST /third-parties", () => {
-  test("not supplying a body", async () => {
+  test("no inputs", async () => {
     await supertest(testServer).post("/third-parties").expect(400);
   });
 
-  test("supplying an empty body", async () => {
-    await supertest(testServer).post("/third-parties").send({}).expect(400);
-  });
-
-  test("supplying a bad property: 'badProperty'", async () => {
-    await supertest(testServer)
-      .post("/third-parties")
-      .send({
-        badProperty: "name",
-      })
-      .expect(400);
-  });
-
-  test("supplying a single invalid value along with a valid value: invalid URI", async () => {
+  test("invalid input: URI", async () => {
     await supertest(testServer)
       .post("/third-parties")
       .send({ name: "validName", uri: null })
       .expect(400);
   });
 
-  test("supplying a single invalid value along with a valid value: invalid name", async () => {
+  test("invalid input: name", async () => {
     await supertest(testServer)
       .post("/third-parties")
       .send({ name: null, uri: "https://example.com/test" })
       .expect(400);
   });
 
-  test("supplying a single valid property and value: name", async () => {
-    await supertest(testServer)
-      .post("/third-parties")
-      .send({ name: "validName" })
-      .expect(400);
+  test("existing third-party", async () => {
+    //ADD LOGIC HERE
   });
 
-  test("supplying a single valid property and value: uri", async () => {
-    await supertest(testServer)
-      .post("/third-parties")
-      .send({ uri: "https://example.com/test" })
-      .expect(400);
-  });
-
-  test("supplying a blank string for both properties", async () => {
-    await supertest(testServer)
-      .post("/third-parties")
-      .send({ name: " ", uri: " " })
-      .expect(400);
-  });
-
-  test("supplying valid values", async () => {
+  test("valid inputs", async () => {
     const res = await supertest(testServer)
       .post("/third-parties")
       .send({ name: "validName", uri: "https://example.com/test" })
@@ -146,25 +106,11 @@ describe("Creation of a generic third-party origin: POST /third-parties", () => 
 
 //authenticate
 describe("Authenticating a third-party origin: POST /third-parties/authenticate", () => {
-  test("not supplying a body", async () => {
+  test("no inputs", async () => {
     await supertest(testServer).post("/third-parties/authenticate").expect(400);
   });
 
-  test("supplying an empty body", async () => {
-    await supertest(testServer)
-      .post("/third-parties/authenticate")
-      .send({})
-      .expect(400);
-  });
-
-  test("supplying a bad property", async () => {
-    await supertest(testServer)
-      .post("/third-parties/authenticate")
-      .send({ badProperty: null })
-      .expect(400);
-  });
-
-  test("supplying a single invalid value along with a valid value: invalid emailUsername", async () => {
+  test("invalid input: emailUsername", async () => {
     await supertest(testServer)
       .post("/third-parties/authenticate")
       .send({
@@ -175,7 +121,7 @@ describe("Authenticating a third-party origin: POST /third-parties/authenticate"
       .expect(400);
   });
 
-  test("supplying a single invalid value along with a valid value: invalid password", async () => {
+  test("invalid input: password", async () => {
     await supertest(testServer)
       .post("/third-parties/authenticate")
       .send({
@@ -186,7 +132,7 @@ describe("Authenticating a third-party origin: POST /third-parties/authenticate"
       .expect(400);
   });
 
-  test("supplying a single invalid value along with a valid value: invalid password", async () => {
+  test("invalid input: id", async () => {
     await supertest(testServer)
       .post("/third-parties/authenticate")
       .send({
@@ -197,7 +143,7 @@ describe("Authenticating a third-party origin: POST /third-parties/authenticate"
       .expect(400);
   });
 
-  test("supplying valid values", async () => {
+  test("valid inputs", async () => {
     const emailUsername = "validEmailUsername",
       password = "Password123!";
 
@@ -242,33 +188,13 @@ describe("Verifying a third-party origin: POST /third-parties/verify", () => {
 
     await supertest(testServer)
       .post("/third-parties/verify")
-      .send({ token: "" })
-      .expect(406);
-
-    await supertest(testServer)
-      .post("/third-parties/verify")
-      .send({ token: " " })
-      .expect(406);
-
-    await supertest(testServer)
-      .post("/third-parties/verify")
-      .send({})
-      .expect(406);
-
-    await supertest(testServer)
-      .post("/third-parties/verify")
-      .send({ invalidProperty: null })
-      .expect(406);
-
-    await supertest(testServer)
-      .post("/third-parties/verify")
-      .send({ token: 123 })
+      .send({ token: "invalid input" })
       .expect(406);
 
     await supertest(testServer).post("/third-parties/verify").expect(406);
   });
 
-  test("invalid token: expired", async () => {
+  test("expired token", async () => {
     //essentially an empty token that only contains the exp property set to an expired time
     const expiredToken = webToken.sign({
       exp: Math.floor(Date.now() / 1000) - 10, //exp set to 10 minutes prior to the time of code execution
@@ -282,7 +208,7 @@ describe("Verifying a third-party origin: POST /third-parties/verify", () => {
     //automatically throws if the token is expired
   });
 
-  test("invalid token: user does not exist", async () => {
+  test("user does not exist", async () => {
     const emailUsername = "validEmailUsername",
       password = "Password123!";
 

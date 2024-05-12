@@ -120,7 +120,7 @@ describe("Initializing a user: POST /users", () => {
       .send({ emailUsername, password })
       .expect(201);
 
-    await supertest(testServer).delete(`/users/${res.body.id}`).expect(204);
+    await supertest(testServer).delete(`/users/${res.body.id}`).expect(204); //clean up
   });
 });
 
