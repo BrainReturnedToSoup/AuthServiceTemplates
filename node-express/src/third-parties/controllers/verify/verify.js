@@ -76,7 +76,7 @@ async function verifyUserID(req) {
  *  achieved purely with response status codes corresponding to this route success.
  */
 function respond(res) {
-  //successful but no body content
+  //successful but no body content. third-party tokens do not get refreshed like user tokens
   res.status(204).end();
 }
 

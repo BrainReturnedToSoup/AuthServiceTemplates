@@ -97,7 +97,7 @@ export default {
     try {
       password.validateInput(req);
       await password.getData(req);
-      password.compare(req);
+      await password.compare(req);
       respond(req, res);
     } catch (error) {
       errorHandler.password(req, res, error);

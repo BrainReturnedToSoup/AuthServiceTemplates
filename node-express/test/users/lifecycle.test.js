@@ -9,20 +9,11 @@ import dataManagementApis from "../../src/lib/utils/data-management/dataManageme
 
 //delete
 describe("Deleting a user: DELETE /users/:id", () => {
-  test("invalid input: null", async () => {
+  test("invalid input", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
     const id = null;
-
-    await supertest(testServer).delete(`/users/${id}`).expect(400);
-  });
-
-  test("invalid input: random string", async () => {
-    const id = "al9Sk@#iLwPQ"; //not a uuid
-
-    await supertest(testServer).delete(`/users/${id}`).expect(400);
-  });
-
-  test("invalid input: uuid with a pre space", async () => {
-    const id = " 4bc575b7-93ba-41bf-b08d-4fddb355afb4";
 
     await supertest(testServer).delete(`/users/${id}`).expect(400);
   });
@@ -67,23 +58,15 @@ describe("Deleting a user: DELETE /users/:id", () => {
 
 //initialize
 describe("Initializing a user: POST /users", () => {
-  test("not supplying a body", async () => {
+  test("no inputs", async () => {
     await supertest(testServer).post("/users").expect(400);
   });
 
-  test("supplying an empty body", async () => {
-    await supertest(testServer).post("/users").send({}).expect(400);
-  });
+  test("invalid input: emailUsername", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
 
-  test("supplying a bad property: 'badProperty'", async () => {
-    await supertest(testServer)
-      .post("/users")
-      .send({ badProperty: null })
-      .expect(400);
-  });
-
-  test("supplying a single invalid value along with a valid value: emailUsername", async () => {
-    const emailUsername = null,
+    const emailUsername = "invalid emailUsername",
       password = "Password123!";
 
     await supertest(testServer)
@@ -92,9 +75,12 @@ describe("Initializing a user: POST /users", () => {
       .expect(400);
   });
 
-  test("supplying a single invalid value along with a valid value: password", async () => {
-    const emailUsername = "validUsername",
-      password = null;
+  test("invalid input: password", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
+    const emailUsername = "validEmailUsername",
+      password = "invalid password";
 
     await supertest(testServer)
       .post("/users")
@@ -102,50 +88,9 @@ describe("Initializing a user: POST /users", () => {
       .expect(400);
   });
 
-  test("constraint validation: emailUsername", async () => {
-    const emailUsernames = [
-        "short",
-        "loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong",
-        "invalid)",
-        "invalid ",
-        "!",
-        " ",
-        "",
-      ],
-      password = "Password123!";
-
-    for (const emailUsername of emailUsernames) {
-      await supertest(testServer)
-        .post("/users")
-        .send({ emailUsername, password })
-        .expect(400);
-    }
-  });
-
-  test("constraint validation: password", async () => {
-    const emailUsername = "validUsername",
-      passwords = [
-        "Sh0rt!",
-        "Looooooooooooooooooooooooooooooooooooong0!",
-        "invalid",
-        "INVALID",
-        "Invalid)",
-        "!0",
-        " ",
-        "",
-      ];
-
-    for (const password of passwords) {
-      await supertest(testServer)
-        .post("/users")
-        .send({ emailUsername, password })
-        .expect(400);
-    }
-  });
-
-  test("supplying invalid values: existing user", async () => {
+  test("existing user", async () => {
     const id = "4bc575b7-93ba-41bf-b08d-4fddb355afb4",
-      emailUsername = "validUsername",
+      emailUsername = "validEmailUsername",
       password = "Password123!";
 
     await dataManagementApis.queryNoReturn(
@@ -166,8 +111,8 @@ describe("Initializing a user: POST /users", () => {
     await supertest(testServer).delete(`/users/${id}`).expect(204);
   });
 
-  test("supplying valid values", async () => {
-    const emailUsername = "validUsername",
+  test("valid inputs", async () => {
+    const emailUsername = "validEmailUsername",
       password = "Password123!";
 
     const res = await supertest(testServer)
@@ -181,8 +126,11 @@ describe("Initializing a user: POST /users", () => {
 
 //authenticate
 describe("Authenticating a user: POST /users/authenticate", () => {
-  test("invalid input: email", async () => {
-    const emailUsername = "validUsername",
+  test("invalid input: emailUsername", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
+    const emailUsername = "validEmailUsername",
       password = "Password123!";
 
     const res = await supertest(testServer)
@@ -192,13 +140,16 @@ describe("Authenticating a user: POST /users/authenticate", () => {
 
     await supertest(testServer)
       .post("/users/authenticate")
-      .send({ emailUsername: "invalid email", password })
+      .send({ emailUsername: "invalid emailUsername", password })
       .expect(400);
 
     await supertest(testServer).delete(`/users/${res.body.id}`).expect(204);
   });
 
   test("invalid input: password", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
     const emailUsername = "validUsername",
       password = "Password123!";
 
@@ -209,7 +160,7 @@ describe("Authenticating a user: POST /users/authenticate", () => {
 
     await supertest(testServer)
       .post("/users/authenticate")
-      .send({ emailUsername, password: "invalid" })
+      .send({ emailUsername, password: "invalid password" })
       .expect(400);
 
     await supertest(testServer).delete(`/users/${res.body.id}`).expect(204);
@@ -240,38 +191,17 @@ describe("Authenticating a user: POST /users/authenticate", () => {
 
 //verify
 describe("Verifying a user: POST /users/verify", () => {
-  test("invalid inputs", async () => {
-    await supertest(testServer)
-      .post("/users/verify")
-      .send({ token: null })
-      .expect(406);
+  test("invalid input", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
 
     await supertest(testServer)
       .post("/users/verify")
-      .send({ token: "" })
+      .send({ token: "invalid token" })
       .expect(406);
-
-    await supertest(testServer)
-      .post("/users/verify")
-      .send({ token: " " })
-      .expect(406);
-
-    await supertest(testServer).post("/users/verify").send({}).expect(406);
-
-    await supertest(testServer)
-      .post("/users/verify")
-      .send({ invalidProperty: null })
-      .expect(406);
-
-    await supertest(testServer)
-      .post("/users/verify")
-      .send({ token: 123 })
-      .expect(406);
-
-    await supertest(testServer).post("/users/verify").expect(406);
   });
 
-  test("invalid token: expired", async () => {
+  test("invalid input: token expired", async () => {
     //essentially an empty token that only contains the exp property set to an expired time
     const expiredToken = webToken.sign({
       exp: Math.floor(Date.now() / 1000) - 10, //exp set to 10 minutes prior to the time of code execution
@@ -357,7 +287,75 @@ describe("Verifying a user: POST /users/verify", () => {
 });
 
 //compare passwords
-describe("Compare a supplied password to a stored password: POST /users/password", () => {});
+describe("Compare a supplied password to a stored password: POST /users/password", () => {
+  test("invalid input: id ", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
+    const id = "invalid id",
+      password = "Password123!";
+
+    await supertest(testServer)
+      .post("/users/password")
+      .send({ userID: id, password })
+      .expect(400);
+  });
+
+  test("invalid input: password", async () => {
+    //unit test for input validation will handle the edge cases,
+    //just need to check error code propagation
+
+    const id = "4bc575b7-93ba-41bf-b08d-4fddb355afb4",
+      password = "invalid password";
+
+    await supertest(testServer)
+      .post("/users/password")
+      .send({ userID: id, password })
+      .expect(400);
+  });
+
+  test("user does not exist", async () => {
+    const id = "4bc575b7-93ba-41bf-b08d-4fddb355afb4",
+      password = "Password123!";
+
+    await supertest(testServer)
+      .post("/users/password")
+      .send({ userID: id, password })
+      .expect(404);
+  });
+
+  test("valid inputs", async () => {
+    const emailUsername = "validEmailUsername",
+      password = "Password123!";
+
+    const initRes = await supertest(testServer)
+      .post("/users")
+      .send({ emailUsername, password })
+      .expect(201);
+
+    await supertest(testServer)
+      .post("/users/password")
+      .send({ userID: initRes.body.id, password })
+      .expect(200)
+      .then((res) => {
+        const { matches } = res.body;
+
+        expect(matches).toBeTruthy();
+      });
+
+    await supertest(testServer)
+      .post("/users/password")
+      .send({ userID: initRes.body.id, password: "DiffPassword123!" })
+      .expect(200)
+      .then((res) => {
+        const { matches } = res.body;
+
+        expect(matches).toBeFalsy();
+      });
+
+    await supertest(testServer).delete(`/users/${initRes.body.id}`).expect(204);
+  });
+});
 
 //compare emailUsernames
 describe("Compare a supplied emailUsername to a stored emailUsername: POST /users/email-username", () => {});
