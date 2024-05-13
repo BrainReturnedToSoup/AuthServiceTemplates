@@ -1,3 +1,6 @@
+import { config } from "dotenv";
+config();
+
 import webToken from "../../../../src/lib/utils/web-token/webToken";
 import webTokenErrors from "../../../../src/lib/errors/util/web-token";
 import webTokenErrorEnums from "../../../../src/lib/enums/error/util/webToken";
@@ -53,8 +56,10 @@ describe("testing for output on valid token", () => {
   test("valid", async () => {
     const payload = { exp: Math.floor(Date.now() / 1000) + 10 };
 
+    const token = webToken.sign(payload);
+
     try {
-      webToken.verify(payload);
+      webToken.verify(token);
     } catch (error) {
       expect(error).toBeFalsy();
     }
